@@ -6,7 +6,6 @@ import Card from "@/src/components/card/Card";
 
 export default function Home() {
   const dispatch = useDispatch();
-  console.log(useSelector((state) => state));
   return (
     <div className="px-16 py-8">
       <h1 className="text-5xl font-bold w-1/2 ">
@@ -25,10 +24,9 @@ export default function Home() {
       <h2 className="text-3xl font-bold">Popular</h2>
       <div className="grid my-8 sm:grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-4">
         {Array.from({ length: 6 }).map((_, index) => (
-          <Card />
+          <Card key={index} />
         ))}
       </div>
-     
     </div>
   );
 }

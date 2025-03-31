@@ -3,32 +3,29 @@ import axiosClient from "./baseApi";
 const authApi = {
   login: async (email, password) => {
     const response = await axiosClient.post("/auth/login", { email, password });
-
     if (response.data.accessToken && response.data.refreshToken) {
       localStorage.setItem("accessToken", response.data.accessToken);
       localStorage.setItem("refreshToken", response.data.refreshToken);
     }
     return response.data;
   },
-  createAccount: async (email) => {
-    const response = await api.post("/auth/create-account", { email });
-    return response.data;
-  },
-  getUserInfo: async () => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) throw new Error("No access token available");
 
-    const response = await api.get(`/user/info?accessToken=${accessToken}`);
-    return response.data;
-  },
-  register: async (fullName, email, password, roleName) => {
-    const response = await axiosClient.post("/admin/register", {
+  createAccount: async (fullName, email, password, roleName) => {
+    const response = await axiosClient.post("/admin/create-account", {
       fullName,
       email,
       password,
       roleName,
     });
+    return response.data;
+  },
 
+  register: async (fullName, email, password) => {
+    const response = await axiosClient.post("/customer/register", {
+      fullName,
+      email,
+      password,
+    });
     return response.data;
   },
 
@@ -45,10 +42,14 @@ const authApi = {
     return response.data.accessToken;
   },
 
-  logout: () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    window.location.href = "/home";
+  getUserInfo: async () => {
+    const response = await axiosClient.get("/me");
+    return response.data;
+  },
+
+  activateAccount: async (token) => {
+    const response = await axiosClient.post("/active/account", { token });
+    return response.data;
   },
 };
 

@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
@@ -13,6 +14,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 @Slf4j
@@ -25,13 +27,13 @@ public class JwtUtilities{
 
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
-    
+
     @Value("${jwt.refreshExpiration}")
     private Long refreshTokenExpiration;
 
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return extractClaim(token, claims -> claims.get("email", String.class));
     }
 
     public Claims extractAllClaims(String token) {return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();}
@@ -46,43 +48,22 @@ public class JwtUtilities{
         final String email = extractUsername(token);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-    
+
     public Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
-    
-    public String generateRegisterToken(String email, String pass, String context) {
-		return Jwts.builder()
-				.setSubject(context)
-				.claim("email",email)
-				.claim("pass", pass)
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(Date.from(Instant.now().plus(refreshTokenExpiration, ChronoUnit.MILLIS)))
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
-	}
 
-    public String generateAccessToken(String email, String role, String key, String context) {
+    public String generateToken(Map<String, String> parameters, String context) {
 
-        return Jwts.builder()
-        		.setSubject(email)
-        		.claim("role",role)
-        		.setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(Date.from(Instant.now().plus(jwtExpiration, ChronoUnit.MILLIS)))
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
-    }
-    
-    public String generateRefreshToken(String email, String accesskey, String key, String context) {
-        return Jwts.builder()
-                .setSubject(context)
-                .claim("email", email)
-                .claim("access_key", accesskey)
+        JwtBuilder tokenBuilder = Jwts.builder().setSubject(context)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(Date.from(Instant.now().plus(refreshTokenExpiration, ChronoUnit.MILLIS)))
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
+                .signWith(SignatureAlgorithm.HS256, secret);
+
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+            tokenBuilder.claim(entry.getKey(), entry.getValue());
+        }
+        return tokenBuilder.compact();
     }
 
     public boolean validateToken(String token) {
@@ -109,12 +90,12 @@ public class JwtUtilities{
     }
 
     public String getToken (HttpServletRequest httpServletRequest) {
-         final String bearerToken = httpServletRequest.getHeader("Authorization");
-         if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer "))
-         {return bearerToken.substring(7,bearerToken.length()); }
-         return null;
+        final String bearerToken = httpServletRequest.getHeader("Authorization");
+        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer "))
+        {return bearerToken.substring(7,bearerToken.length()); }
+        return null;
     }
-    
+
     public Long getJwtExpiration() {
         return jwtExpiration;
     }

@@ -19,12 +19,12 @@ import jakarta.mail.internet.MimeMessage;
 @Service
 public class MailService {
 
-	private final JavaMailSender mailSender;
-	
+    private final JavaMailSender mailSender;
+
     public MailService(JavaMailSender mailSender) {
-		this.mailSender = mailSender;
-	}
-    
+        this.mailSender = mailSender;
+    }
+
     @Async
     public void sendHtmlEmail(String fromEmail, String toEmail, String subject, String template, Map<String, String> parameters) throws MessagingException, IOException {
         MimeMessage message = mailSender.createMimeMessage();
@@ -33,13 +33,13 @@ public class MailService {
         helper.setFrom(fromEmail);
         helper.setTo(toEmail);
         helper.setSubject(subject);
-
         ClassPathResource resource = new ClassPathResource(template);
         String htmlTemplate = new String(Files.readAllBytes(resource.getFile().toPath()), StandardCharsets.UTF_8);
         String htmlContent = replaceTemplateVariables(htmlTemplate, parameters);
 
-        helper.setText(htmlContent, true);
+        System.out.println("Parameters: " + parameters);
 
+        helper.setText(htmlContent, true);
         mailSender.send(message);
     }
 

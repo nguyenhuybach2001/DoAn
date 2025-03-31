@@ -1,7 +1,6 @@
 package com.bach.RoomRentalManagementSystem.model;
 
-import java.time.LocalDateTime;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,25 +13,22 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user_tokens")
-public class UserToken {
+@Table(name = "asset")
+public class Asset {
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Column(name = "id")
+    private Long assetId;
+
+    private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private User user;
-
-    private String accessKey;
-    private String refreshKey;
-    private LocalDateTime createdAt;
-    private LocalDateTime expiresAt;
+    @JoinColumn(name = "role_id")
+    private Role role;
 }

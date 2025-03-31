@@ -2,8 +2,7 @@ package com.bach.RoomRentalManagementSystem.serviceImpl;
 
 import java.util.Map;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
+import com.bach.RoomRentalManagementSystem.dto.UserDto;
 
 import com.bach.RoomRentalManagementSystem.dto.LoginDto;
 import com.bach.RoomRentalManagementSystem.dto.RegisterDto;
@@ -18,7 +17,7 @@ public interface ImplUserService {
 	Role saveRole(Role role);
 
 	User saverUser (User user) ;
-	String refreshAccessToken(String refreshToken);
-	User getCurrentUser(String accessToken);
-	
+	Map<String, String> refreshAccessToken(String refreshToken);
+	UserDto getCurrentUser();
+
 }

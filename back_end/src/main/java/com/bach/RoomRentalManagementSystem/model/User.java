@@ -2,6 +2,7 @@ package com.bach.RoomRentalManagementSystem.model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,35 +35,46 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class User implements UserDetails {
-	
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "user_id")
-    private Long userId;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Long id;
+
+    @Column(name = "full_name", length = 50, nullable = false)
     private String fullName;
+    @Column(name = "email", length = 100, nullable = false)
     private String email;
+    @Column(name = "phone_number", length = 10)
     private String phone;
+    @Column(name = "password", nullable = false)
     private String passwordHash;
+    @Column(name = "identity_number", length = 12)
     private String identityNumber;
+
     private String address;
     private Date dateOfBirth;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = false;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_role", referencedColumnName = "role_id")
     private Role role;
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Collections.singletonList(new SimpleGrantedAuthority(this.role.getRoleName()));
-	}
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(this.role.getRoleName()));
+    }
 
-	@Override
-	public String getUsername() {
-		return this.email;
-	}
-	
-	@Override
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -82,15 +94,18 @@ public class User implements UserDetails {
         return true;
     }
 
-	@Override
-	public String getPassword() {
-		return passwordHash;
-	}
+    @Override
+    public String getPassword() {
+        return passwordHash;
+    }
 
-	public User(String email, String pass, Object role) {
-		this.email = email;
-		this.passwordHash = pass;
-		this.role = (Role) role;
-	}
+    public User(String email, String pass, Object role) {
+        this.email = email;
+        this.passwordHash = pass;
+        this.role = (Role) role;
+        this.fullName = "ABC";
+        this.isActive = true;
+        this.createdAt = LocalDateTime.now();
+    }
 
 }
