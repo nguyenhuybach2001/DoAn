@@ -5,73 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0c7e44fe-ce81-40b6-a908-ea8c4c1024f1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/dto/ActiveDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/dto/UserDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/dto/resetPasswordDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/.classpath" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/.classpath" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/dto/ResetPasswordDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/dto/RegisterDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/dto/RegisterDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/model/UserToken.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/model/UserToken.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/repository/IUserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/repository/IUserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/repository/IUserTokenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/repository/IUserTokenRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/security/JwtUtilities.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/security/JwtUtilities.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/security/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/service/MailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/service/MailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/dto/resetPasswordDto.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/serviceImpl/ImplUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/java/com/bach/RoomRentalManagementSystem/serviceImpl/ImplUserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back_end/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/src/main/resources/templates/validate.html" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/resources/templates/validate.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/RoomRentalManagementSystem-0.0.1-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/RoomRentalManagementSystemApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/controller/UserController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/controller/hello.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/dto/BearerToken.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/dto/LoginDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/dto/RegisterDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/model/Building.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/model/Permission.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/model/Role.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/model/RoleName.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/model/Room.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/model/User.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/model/UserToken.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/repository/IRoleRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/repository/IUserRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/repository/IUserTokenRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/security/CustomerUserDetailsService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/security/JwtAuthenticationFilter.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/security/JwtUtilities.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/security/SecurityConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/service/MailService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/service/UserService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/com/bach/RoomRentalManagementSystem/serviceImpl/ImplUserService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/classes/templates/validate.html" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/src/main/resources/templates/notify_create_account.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/maven-archiver/pom.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/surefire-reports/2025-03-25T00-59-00_984-jvmRun1.dump" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/surefire-reports/TEST-com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplicationTests.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/surefire-reports/com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplicationTests.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/back_end/target/test-classes/com/bach/RoomRentalManagementSystem/RoomRentalManagementSystemApplicationTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front_end/.env" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front_end/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back_end/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back_end/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/back_end/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/back_end/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front_end/app/layout.js" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/app/layout.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front_end/src/api/authApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/src/api/authApi.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front_end/src/api/baseApi.js" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/src/api/baseApi.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front_end/src/components/card/Card.js" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/src/components/card/Card.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front_end/src/components/header/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/src/components/header/Header.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front_end/src/page/home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/src/page/home/Home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front_end/src/redux/store.js" beforeDir="false" afterPath="$PROJECT_DIR$/front_end/src/redux/store.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,7 +61,7 @@
     &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/BachNguyen/Desktop/DoAn/DoAn/back_end/src/main/resources/templates&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.annotationProcessors&quot;
   }
 }</component>
   <component name="RecentsManager">

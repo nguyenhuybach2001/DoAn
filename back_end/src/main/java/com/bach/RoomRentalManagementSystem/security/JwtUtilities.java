@@ -19,50 +19,67 @@ import java.util.function.Function;
 
 @Slf4j
 @Component
-public class JwtUtilities{
+public class JwtUtilities {
 
 
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration}")
-    private Long jwtExpiration;
-
-    @Value("${jwt.refreshExpiration}")
-    private Long refreshTokenExpiration;
-
-
     public String extractUsername(String token) {
         return extractClaim(token, claims -> claims.get("email", String.class));
     }
 
-    public Claims extractAllClaims(String token) {return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();}
+    public Claims extractAllClaims(String token) {
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+    }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
-    public Date extractExpiration(String token) { return extractClaim(token, Claims::getExpiration); }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String email = extractUsername(token);
-        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
     }
+
+//    public Boolean validateToken(String token, UserDetails userDetails) {
+//        final String email = extractUsername(token);
+//        return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
+//    }
 
     public Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        Date expiration = extractExpiration(token);
+        Date now = new Date();
+        boolean expired = expiration.before(now);
+        log.info("Token expiration: {}, now: {}, isExpired: {}", expiration, now, expired);
+        return expired;
     }
 
-    public String generateToken(Map<String, String> parameters, String context) {
+    public String generateToken(Map<String, String> parameters, String context, long expirationTime) {
+        Instant expirationInstant = Instant.now().plus(expirationTime, ChronoUnit.MILLIS);
 
-        JwtBuilder tokenBuilder = Jwts.builder().setSubject(context)
+        JwtBuilder tokenBuilder = Jwts.builder()
+                .setSubject(context)
+                .setExpiration(Date.from(expirationInstant))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(Date.from(Instant.now().plus(refreshTokenExpiration, ChronoUnit.MILLIS)))
                 .signWith(SignatureAlgorithm.HS256, secret);
 
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
             tokenBuilder.claim(entry.getKey(), entry.getValue());
         }
+
+        return tokenBuilder.compact();
+    }
+    
+    public String generateSimpleToken(Map<String, String> parameters, String context) {
+        JwtBuilder tokenBuilder = Jwts.builder()
+                .setSubject(context)
+                .signWith(SignatureAlgorithm.HS256, secret);
+
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+            tokenBuilder.claim(entry.getKey(), entry.getValue());
+        }
+
         return tokenBuilder.compact();
     }
 
@@ -70,15 +87,15 @@ public class JwtUtilities{
         try {
             Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return true;
+        } catch (ExpiredJwtException e) {
+            log.info("Expired JWT token. Token expired at: {}", e.getClaims().getExpiration());
+            log.trace("Expired JWT token trace: {}", e);
         } catch (SignatureException e) {
             log.info("Invalid JWT signature.");
             log.trace("Invalid JWT signature trace: {}", e);
         } catch (MalformedJwtException e) {
             log.info("Invalid JWT token.");
             log.trace("Invalid JWT token trace: {}", e);
-        } catch (ExpiredJwtException e) {
-            log.info("Expired JWT token.");
-            log.trace("Expired JWT token trace: {}", e);
         } catch (UnsupportedJwtException e) {
             log.info("Unsupported JWT token.");
             log.trace("Unsupported JWT token trace: {}", e);
@@ -89,15 +106,12 @@ public class JwtUtilities{
         return false;
     }
 
-    public String getToken (HttpServletRequest httpServletRequest) {
+    public String getToken(HttpServletRequest httpServletRequest) {
         final String bearerToken = httpServletRequest.getHeader("Authorization");
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer "))
-        {return bearerToken.substring(7,bearerToken.length()); }
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7, bearerToken.length());
+        }
         return null;
-    }
-
-    public Long getJwtExpiration() {
-        return jwtExpiration;
     }
 
 }

@@ -12,9 +12,6 @@ import com.bach.RoomRentalManagementSystem.model.UserToken;
 
 public interface IUserTokenRepository extends JpaRepository<UserToken, Long> {
 
-    Boolean existsByUser_IdAndRefreshKey(
-            @Param("refreshKey") String refreshKey,
-            @Param("userId") Long userId
-    );
+    Boolean existsByUser_IdAndRefreshKey(Long userId, String refreshKey);
 
 }

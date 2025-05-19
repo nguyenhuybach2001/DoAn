@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .requestMatchers("/user/**").hasAuthority("CUSTOMER")
                 .requestMatchers("/staff/**").hasAuthority("STAFF")
                 .requestMatchers("/admin/**").hasAuthority("LANDLORD")
+                .requestMatchers("/auth/**", "/public/**").authenticated()
                 .anyRequest().permitAll();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

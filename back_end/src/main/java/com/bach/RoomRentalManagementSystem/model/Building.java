@@ -1,17 +1,13 @@
 package com.bach.RoomRentalManagementSystem.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode
@@ -23,12 +19,28 @@ public class Building {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
+	@Column(name = "building_id")
     private Long buildingId;
 
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "total_rooms")
+    private Integer totalRooms;
+
+    @Column(name = "image")
+    private String image;
+
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+    @Column(name = "electricity_price")
+    private Double electricityPrice;
+
+    @Column(name = "water_price")
+    private Double waterPrice;
+
 }

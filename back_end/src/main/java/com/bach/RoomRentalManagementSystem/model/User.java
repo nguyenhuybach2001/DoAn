@@ -1,27 +1,17 @@
 package com.bach.RoomRentalManagementSystem.model;
 
-import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -51,18 +41,23 @@ public class User implements UserDetails {
     private String passwordHash;
     @Column(name = "identity_number", length = 12)
     private String identityNumber;
+    @Column(name = "is_password_changed",  nullable = false)
+    private Boolean IsPasswordChanged = true;
+
+
 
     private String address;
     private Date dateOfBirth;
 
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive = false;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_role", referencedColumnName = "role_id")
+    @JoinColumn(name = "user_role", referencedColumnName = "role_id", nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<RentalContract> contracts;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -103,9 +98,7 @@ public class User implements UserDetails {
         this.email = email;
         this.passwordHash = pass;
         this.role = (Role) role;
-        this.fullName = "ABC";
-        this.isActive = true;
+        this.fullName = "User";
         this.createdAt = LocalDateTime.now();
     }
-
 }
