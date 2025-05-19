@@ -11,12 +11,19 @@
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
     "@reduxjs/toolkit": "^2.6.1",
+    "@stomp/stompjs": "^7.1.1",
+    "@stripe/react-stripe-js": "^3.6.0",
+    "@stripe/stripe-js": "^7.2.0",
     "antd": "^5.24.4",
     "axios": "^1.8.4",
-    "next": "14.2.25",
+    "chart.js": "^4.4.8",
+    "js-cookie": "^3.0.5",
+    "next": "^14.2.28",
     "react": "^18",
+    "react-chartjs-2": "^5.3.0",
     "react-dom": "^18",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "sockjs-client": "^1.6.1"
   },
   "devDependencies": {
     "postcss": "^8",

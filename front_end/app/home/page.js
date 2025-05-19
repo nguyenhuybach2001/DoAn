@@ -3,8 +3,6 @@ import React from "react";
 
 export default function Page() {
   return (
-    <div>
-      <Home />
-    </div>
+    <div className="px-16 py-8"><Home /></div>
   );
 }

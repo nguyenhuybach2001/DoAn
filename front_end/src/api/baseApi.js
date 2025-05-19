@@ -22,12 +22,12 @@ axiosClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
         const refreshToken = getRefreshToken();
+        console.log(refreshToken);
         if (!refreshToken) throw new Error("Refresh token not found");
 
         const response = await axios.post(
@@ -39,7 +39,7 @@ axiosClient.interceptors.response.use(
         localStorage.setItem("accessToken", newAccessToken);
 
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return axios(originalRequest);
+        return axiosClient(originalRequest);
       } catch (refreshError) {
         console.error("Failed to refresh token:", refreshError);
         localStorage.removeItem("accessToken");

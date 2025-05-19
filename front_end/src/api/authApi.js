@@ -1,31 +1,28 @@
+import Cookies from "js-cookie";
 import axiosClient from "./baseApi";
 
 const authApi = {
   login: async (email, password) => {
-    const response = await axiosClient.post("/auth/login", { email, password });
-    if (response.data.accessToken && response.data.refreshToken) {
-      localStorage.setItem("accessToken", response.data.accessToken);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
+    try {
+      const response = await axiosClient.post("/login", {
+        email,
+        password,
+      });
+      if (response.data.accessToken && response.data.refreshToken) {
+        localStorage.setItem("accessToken", response.data.accessToken);
+        localStorage.setItem("refreshToken", response.data.refreshToken);
+        Cookies.set("accessToken", response.data.accessToken);
+        Cookies.set("refreshToken", response.data.refreshToken);
+      }
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
     }
-    return response.data;
   },
 
-  createAccount: async (fullName, email, password, roleName) => {
-    const response = await axiosClient.post("/admin/create-account", {
-      fullName,
-      email,
-      password,
-      roleName,
-    });
-    return response.data;
-  },
-
-  register: async (fullName, email, password) => {
-    const response = await axiosClient.post("/customer/register", {
-      fullName,
-      email,
-      password,
-    });
+  createAccount: async (data) => {
+    const response = await axiosClient.post("/admin/create-account", data);
     return response.data;
   },
 
@@ -37,18 +34,38 @@ const authApi = {
 
     if (response.data.accessToken) {
       localStorage.setItem("accessToken", response.data.accessToken);
+      Cookies.set("accessToken", response.data.accessToken);
     }
 
     return response.data.accessToken;
   },
 
   getUserInfo: async () => {
-    const response = await axiosClient.get("/me");
+    const response = await axiosClient.get("/auth/me");
+    return response.data;
+  },
+  changePassword: async (data) => {
+    const response = await axiosClient.put("/auth/change-password", data);
+    return response.data;
+  },
+  updateUserInfo: async (data) => {
+    const response = await axiosClient.put("/auth/me", data);
     return response.data;
   },
 
-  activateAccount: async (token) => {
-    const response = await axiosClient.post("/active/account", { token });
+  activateAccount: async (token, email) => {
+    const response = await axiosClient.post("/active/account", {
+      token,
+      email,
+    });
+    return response.data;
+  },
+  resetPassword: async (data) => {
+    const { oldPassword, newPassword } = data;
+    const response = await axiosClient.put("/reset-password", {
+      oldPassword,
+      newPassword,
+    });
     return response.data;
   },
 };
