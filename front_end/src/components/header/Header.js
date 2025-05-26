@@ -87,7 +87,6 @@ export default function Header() {
       if (responsive) {
         dispatch(closeLogin());
         dispatch(addUser(responsive));
-        
       }
     }
   };
@@ -152,7 +151,7 @@ export default function Header() {
       label: (
         <p
           onClick={() => {
-            setModalUser(true);
+            router.push("/my-rental");
           }}
         >
           My Rentals
@@ -221,7 +220,7 @@ export default function Header() {
       }
     } catch (error) {
       const message =
-        error?.response?.data?.message || "Đăng nhập thất bại, thử lại sau!";
+        error?.response?.data?.error || "Đăng nhập thất bại, thử lại sau!";
       console.error("Login error:", message);
     }
   };
@@ -453,7 +452,7 @@ export default function Header() {
   };
   return (
     !pathName.includes("success") && (
-      <div className="sticky top-0 flex justify-between items-center p-4 bg-white shadow-md px-16 z-20 ">
+      <div className=" flex justify-between items-center p-4 bg-white shadow-md px-16 z-20 ">
         <Image
           src={logo}
           alt="logo"

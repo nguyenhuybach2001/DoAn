@@ -106,7 +106,7 @@ const statisticApi = {
 
   getUtilityUsagePerMonth: async ({ year, room_id, building_id, utilityType }) => {
     try {
-      const response = await axiosClient.get("/admin/statistic/usage/monthly", {
+      const response = await axiosClient.get("/auth/statistic/usage/monthly", {
         params: { year, room_id, building_id, utilityType },
       });
       return response.data;

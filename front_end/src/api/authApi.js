@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 import axiosClient from "./baseApi";
+import { message } from "antd";
 
 const authApi = {
   login: async (email, password) => {
@@ -17,7 +18,12 @@ const authApi = {
 
       return response.data;
     } catch (error) {
-      console.log(error);
+      const msg =
+        error?.response?.data?.error ||
+        error?.error ||
+        "Đã có lỗi xảy ra khi lấy thông tin người dùng.";
+      message.error(msg); // Hiển thị lỗi trên màn hình
+      throw error; // ném lại lỗi để caller (ví dụ trong Redux thunk) biết mà xử lý tiếp
     }
   },
 
@@ -41,8 +47,18 @@ const authApi = {
   },
 
   getUserInfo: async () => {
-    const response = await axiosClient.get("/auth/me");
-    return response.data;
+    try {
+      const response = await axiosClient.get("/auth/me");
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      const msg =
+        error?.response?.data?.error ||
+        error?.error ||
+        "Đã có lỗi xảy ra khi lấy thông tin người dùng.";
+      message.error(msg); // Hiển thị lỗi trên màn hình
+      throw error; // ném lại lỗi để caller (ví dụ trong Redux thunk) biết mà xử lý tiếp
+    }
   },
   changePassword: async (data) => {
     const response = await axiosClient.put("/auth/change-password", data);

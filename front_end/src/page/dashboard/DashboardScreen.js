@@ -21,6 +21,7 @@ import { getListCustomer, getListStaff } from "@/src/redux/slices/userSlice";
 import { getListContracts } from "@/src/redux/slices/contractSlice";
 import Customer from "./Customer/Customer";
 import DashBoardStaff from "@/src/components/dashBoards/DashBoardStaff";
+import Bills from "./Bills/Bills";
 
 export default function DashboardScreen() {
   const { user } = useSelector((state) => state.auth);
@@ -47,15 +48,21 @@ export default function DashboardScreen() {
       ? [{ key: "5", icon: <ContainerOutlined />, label: "Staffs" }]
       : []),
     { key: "6", icon: <ContainerOutlined />, label: "Contracts" },
+    ...(user?.role == "STAFF"
+      ? [{ key: "7", icon: <ContainerOutlined />, label: "Bills" }]
+      : []),
   ];
   const onClick = (e) => {
-    console.log("click ", e);
     setTab(e.key);
   };
   const renderScreen = () => {
     switch (tab) {
       case "1":
-        return user?.role == "LANDLORD" ? <DashBoard /> : <DashBoardStaff />;
+        return user?.role == "LANDLORD" ? (
+          <DashBoard setTab={setTab} />
+        ) : (
+          <DashBoardStaff />
+        );
       case "2":
         return <Customer />;
       case "3":
@@ -66,24 +73,29 @@ export default function DashboardScreen() {
         return <Staffs />;
       case "6":
         return <Contract />;
+      case "7":
+        return <Bills />;
       default:
-        return ;
+        return;
     }
   };
   return (
-    <Layout>
+    <Layout className="h-full">
       <Sider>
         <Menu
           onClick={onClick}
           mode="inline"
+          selectedKeys={tab}
           defaultSelectedKeys={["1"]}
           style={{ height: "100%", borderRight: 0, padding: "16px" }}
           items={items}
           inlineCollapsed={collapse}
         />
       </Sider>
-      <Layout style={{ padding: "0 24px 24px" }}>
-        <Content className="bg-white rounded-lg p-4">{renderScreen()}</Content>
+      <Layout className=" px-6 pb-6">
+        <Content className="bg-white overflow-auto h-full rounded-lg p-4">
+          {renderScreen()}
+        </Content>
       </Layout>
     </Layout>
   );

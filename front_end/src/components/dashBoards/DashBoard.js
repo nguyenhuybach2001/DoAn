@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import img from "@/asset/images/image2.png";
 import {
   Chart as ChartJS,
@@ -10,32 +10,92 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  PointElement,
+  LineElement,
+  Filler,
 } from "chart.js";
-import { Bar, Doughnut } from "react-chartjs-2";
+import { Bar, Doughnut, Line } from "react-chartjs-2";
 import {
   AuditOutlined,
   TeamOutlined,
   UserOutlined,
   HomeOutlined,
 } from "@ant-design/icons";
-import { useSelector } from "react-redux";
-import { Card, Col, Row } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { Card, Col, DatePicker, Row } from "antd";
+import {
+  getContractQuantity,
+  getContractsPerMonth,
+  getProfit,
+  getProfitPerMonth,
+  getTotalExpenses,
+  getTotalExpensesPerMonth,
+  getTotalIncome,
+  getTotalIncomePerMonth,
+  getUtilityUsage,
+  getUtilityUsagePerMonth,
+  getUtilityUsagePerMonthByElectronic,
+  getUtilityUsagePerMonthByWater,
+} from "@/src/redux/slices/statisticSlice";
+import dayjs from "dayjs";
 
 ChartJS.register(
   ArcElement,
   CategoryScale,
   LinearScale,
   BarElement,
+  PointElement,
+  LineElement,
   Tooltip,
   Legend,
-  Title
+  Title,
+  Filler
 );
 
-export default function DashBoard() {
+export default function DashBoard({ setTab }) {
+  const currentYear = dayjs().year();
+  const [year, setYear] = useState(currentYear);
   const { listRoomsByRole } = useSelector((state) => state.rooms);
   const { listContracts } = useSelector((state) => state.contract);
   const { listCustomer, listStaff } = useSelector((state) => state.user);
-
+  const {
+    totalIncome,
+    incomePerMonth,
+    totalExpenses,
+    expensesPerMonth,
+    profit,
+    profitPerMonth,
+    contractQuantity,
+    contractsPerMonth,
+    utilityUsage,
+    utilityUsagePerMonthByElectronic,
+    utilityUsagePerMonthByWater,
+    loading,
+  } = useSelector((state) => state.statistic);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const data = { year: Number(year) };
+    dispatch(getTotalIncome());
+    dispatch(getTotalIncomePerMonth(data));
+    dispatch(getTotalExpenses());
+    dispatch(getTotalExpensesPerMonth(data));
+    dispatch(getProfit());
+    dispatch(getProfitPerMonth(data));
+    // dispatch(getContractQuantity());
+    // dispatch(getContractsPerMonth());
+    dispatch(getUtilityUsage());
+    dispatch(
+      getUtilityUsagePerMonthByElectronic({
+        utilityType: "ELECTRICITY",
+      })
+    );
+    dispatch(
+      getUtilityUsagePerMonthByWater({
+        utilityType: "WATER",
+        year: Number(year),
+      })
+    );
+  }, []);
   const totalRooms = listRoomsByRole?.content?.length || 0;
   const rented =
     listRoomsByRole?.content?.filter((r) => r.status === "RENTED").length || 0;
@@ -68,28 +128,158 @@ export default function DashBoard() {
     "May",
     "June",
     "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const monthOrder = [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
   ];
   const barData = {
     labels: barLabels,
     datasets: [
       {
-        label: "Profits",
-        data: [12, 19, 3, 5, 2, 3, 9],
+        label: "Lợi nhuận",
+        data:
+          profitPerMonth &&
+          monthOrder.map((month) => profitPerMonth[month] || 0),
+        backgroundColor: "#34D399",
+      },
+      {
+        label: "Tổng thu",
+        data:
+          incomePerMonth &&
+          monthOrder.map((month) => incomePerMonth[month] || 0),
         backgroundColor: "#60A5FA",
       },
       {
-        label: "Expenses",
-        data: [2, 3, 20, 5, 1, 4, 2],
+        label: "Tổng chi",
+        data:
+          expensesPerMonth &&
+          monthOrder.map((month) => expensesPerMonth[month] || 0),
         backgroundColor: "#F87171",
       },
     ],
   };
+  const handleYearChange = (date, dateString) => {
+    setYear(dateString);
+    const data = { year: Number(dateString) };
+    dispatch(getProfitPerMonth(data));
+    dispatch(getTotalIncomePerMonth(data));
+    dispatch(getTotalExpensesPerMonth(data));
+  };
+  const lineData = {
+    labels: barLabels,
+    datasets: [
+      {
+        label: "Số điện",
+        data:
+          utilityUsagePerMonthByElectronic &&
+          monthOrder.map(
+            (month) => utilityUsagePerMonthByElectronic[month] || 0
+          ),
+        borderColor: "#f87171", // đỏ
+        backgroundColor: "rgba(248, 113, 113, 0.2)",
+        tension: 0.4, // làm đường cong mượt
+        fill: true,
+      },
+      {
+        label: "Số nước",
+        data:
+          utilityUsagePerMonthByWater &&
+          monthOrder.map((month) => utilityUsagePerMonthByWater[month] || 0),
+        borderColor: "#60a5fa", // xanh dương
+        backgroundColor: "rgba(96, 165, 250, 0.2)",
+        tension: 0.4,
+        fill: true,
+      },
+    ],
+  };
+
+  const lineOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            return `${
+              context.dataset.label
+            }: ${context.raw.toLocaleString()} VNĐ`;
+          },
+        },
+      },
+    },
+    scales: {
+      y: {
+        min: 0,
+        ticks: {
+          callback: (value) => `${value} `,
+        },
+        title: {
+          display: true,
+          text: "Số liệu ",
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: "Tháng",
+        },
+      },
+    },
+  };
 
   const barOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      legend: { position: "top" },
-      title: { display: true, text: "Monthly Report" },
+      legend: {
+        position: "top",
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            return `${
+              context.dataset.label
+            }: ${context.raw.toLocaleString()} VNĐ`;
+          },
+        },
+      },
+    },
+    scales: {
+      y: {
+        min: 0,
+        ticks: {
+          callback: (value) => `${value} `,
+        },
+        title: {
+          display: true,
+          text: "Số tiền (VNĐ)",
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: "Tháng",
+        },
+      },
     },
   };
 
@@ -115,7 +305,12 @@ export default function DashBoard() {
       {/* Statistic Cards */}
       <Row gutter={24}>
         <Col span={6}>
-          <Card className="bg-blue-100 rounded-xl">
+          <Card
+            className="bg-blue-100 rounded-xl cursor-pointer"
+            onClick={() => {
+              setTab("3");
+            }}
+          >
             <div className="flex items-center gap-4">
               <HomeOutlined className="text-2xl text-blue-500" />
               <div>
@@ -126,7 +321,12 @@ export default function DashBoard() {
           </Card>
         </Col>
         <Col span={6}>
-          <Card className="bg-green-100 rounded-xl">
+          <Card
+            className="bg-green-100 rounded-xl cursor-pointer"
+            onClick={() => {
+              setTab("6");
+            }}
+          >
             <div className="flex items-center gap-4">
               <AuditOutlined className="text-2xl text-green-600" />
               <div>
@@ -139,7 +339,12 @@ export default function DashBoard() {
           </Card>
         </Col>
         <Col span={6}>
-          <Card className="bg-yellow-100 rounded-xl">
+          <Card
+            className="bg-yellow-100 rounded-xl cursor-pointer"
+            onClick={() => {
+              setTab("2");
+            }}
+          >
             <div className="flex items-center gap-4">
               <UserOutlined className="text-2xl text-yellow-600" />
               <div>
@@ -152,7 +357,12 @@ export default function DashBoard() {
           </Card>
         </Col>
         <Col span={6}>
-          <Card className="bg-purple-100 rounded-xl">
+          <Card
+            className="bg-purple-100 rounded-xl cursor-pointer"
+            onClick={() => {
+              setTab("5");
+            }}
+          >
             <div className="flex items-center gap-4">
               <TeamOutlined className="text-2xl text-purple-600" />
               <div>
@@ -194,8 +404,33 @@ export default function DashBoard() {
       {/* Bar Chart */}
       <Row>
         <Col span={24}>
-          <Card title="Monthly Financial Overview">
+          <Card
+            title={` Tổng quan tài chính năm ${year}`}
+            extra={
+              <DatePicker
+                onChange={handleYearChange}
+                defaultValue={dayjs()}
+                picker="year"
+              />
+            }
+          >
             <Bar data={barData} options={barOptions} />
+          </Card>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={24}>
+          <Card
+            title={` Tổng quan số điện, nước năm ${year}`}
+            extra={
+              <DatePicker
+                onChange={handleYearChange}
+                defaultValue={dayjs()}
+                picker="year"
+              />
+            }
+          >
+            <Line data={lineData} options={lineOptions} />
           </Card>
         </Col>
       </Row>

@@ -97,6 +97,7 @@ export const getUtilityUsagePerMonth = createAsyncThunk("statistic/utilityUsageP
   }
 });
 
+
 // Slice
 const statisticSlice = createSlice({
   name: "statistic",

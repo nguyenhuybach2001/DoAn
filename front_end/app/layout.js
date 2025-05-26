@@ -28,9 +28,9 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
       >
         <StoreProvider>
-          <Layout className="min-h-screen">
+          <Layout className="h-screen">
             <Header />
-            {children}
+            <div className="h-[calc(100vh_-_96px)] ">{children}</div>
           </Layout>
         </StoreProvider>
       </body>

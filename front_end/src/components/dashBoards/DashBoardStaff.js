@@ -1,27 +1,53 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { Doughnut } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from "chart.js";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Doughnut, Line } from "react-chartjs-2";
 import {
-  UserOutlined,
-  CarOutlined,
-  AlertOutlined,
-  HomeOutlined,
-} from "@ant-design/icons";
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  Title,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+} from "chart.js";
+import { UserOutlined, HomeOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
+import { getUtilityUsagePerMonth } from "@/src/redux/slices/statisticSlice";
+import { Select, Spin } from "antd";
 
-ChartJS.register(ArcElement, Tooltip, Legend, Title);
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  Title,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement
+);
 
 export default function DashBoardStaff() {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const { listRooms } = useSelector((state) => state.rooms); // chỉ các phòng được phân công
-  const { listCustomer } = useSelector((state) => state.user); // khách thuê trong các phòng đó
-  //   const { listVehicles } = useSelector((state) => state.vehicle); // phương tiện liên quan
-  //   const { listRequests } = useSelector((state) => state.request); // các yêu cầu từ khách
+  const { listRoomsByRole } = useSelector((state) => state.rooms);
+  const { listCustomer } = useSelector((state) => state.user);
+  const currentYear = dayjs().year();
+  const [year, setYear] = useState(currentYear);
+  const { utilityUsagePerMonth, loading } = useSelector(
+    (state) => state.statistic
+  );
+
+  useEffect(() => {
+    dispatch(getUtilityUsagePerMonth({ year }));
+  }, [year]);
 
   const rentedRooms =
-    listRooms?.content.filter((room) => room.status === "RENTED") ?? [];
+    listRoomsByRole?.content.filter((room) => room.status === "RENTED") ?? [];
   const availableRooms =
-    listRooms?.content.filter((room) => room.status === "AVAILABLE") ?? [];
+    listRoomsByRole?.content.filter((room) => room.status === "AVAILABLE") ??
+    [];
 
   const chartData = {
     labels: ["Còn trống", "Đã thuê"],
@@ -34,18 +60,50 @@ export default function DashBoardStaff() {
     ],
   };
 
+  const utilityDataSorted = Object.entries(utilityUsagePerMonth || {})
+    .sort(([a], [b]) => parseInt(a) - parseInt(b))
+    .map(([month, usage]) => ({
+      month: `Tháng ${parseInt(month)}`,
+      electricity: usage.electricity,
+      water: usage.water,
+    }));
+
+  const utilityChart = {
+    labels: utilityDataSorted.map((item) => item.month),
+    datasets: [
+      {
+        label: "Điện (kWh)",
+        data: utilityDataSorted.map((item) => item.electricity),
+        fill: false,
+        borderColor: "#3B82F6",
+        backgroundColor: "#3B82F6",
+        tension: 0.4,
+      },
+      {
+        label: "Nước (m³)",
+        data: utilityDataSorted.map((item) => item.water),
+        fill: false,
+        borderColor: "#10B981",
+        backgroundColor: "#10B981",
+        tension: 0.4,
+      },
+    ],
+  };
+
   const chartOptions = {
-    responsive: false,
+    responsive: true,
     plugins: {
       legend: {
         position: "bottom",
       },
-      title: {
-        display: false,
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
       },
     },
   };
-  console.log(listRooms, "jonk");
+
   return (
     <div className="p-8">
       <h1 className="text-3xl font-bold mb-4">Staff Dashboard</h1>
@@ -58,7 +116,7 @@ export default function DashBoardStaff() {
             <p className="text-lg font-semibold">Tổng số phòng</p>
           </div>
           <p className="text-4xl font-bold mt-2">
-            {listRooms?.content.length ?? 0}
+            {listRoomsByRole?.content.length ?? 0}
           </p>
         </div>
         <div className="p-4 bg-green-100 rounded-2xl">
@@ -70,37 +128,38 @@ export default function DashBoardStaff() {
             {listCustomer?.content.length ?? 0}
           </p>
         </div>
-        {/* <div className="p-4 bg-yellow-100 rounded-2xl">
-          <div className="flex items-center gap-3">
-            <CarOutlined />
-            <p className="text-lg font-semibold">Phương tiện</p>
-          </div>
-          <p className="text-4xl font-bold mt-2">
-            {listVehicles?.length ?? 0}
-          </p>
-        </div> */}
-        {/* <div className="p-4 bg-red-100 rounded-2xl">
-          <div className="flex items-center gap-3">
-            <AlertOutlined />
-            <p className="text-lg font-semibold">Yêu cầu hỗ trợ</p>
-          </div>
-          <p className="text-4xl font-bold mt-2">
-            {listRequests?.length ?? 0}
-          </p>
-        </div> */}
       </div>
 
-      <div className="bg-white rounded-2xl p-6 shadow-md w-fit">
-        <h2 className="text-xl font-bold mb-4">Tình trạng phòng</h2>
-        <Doughnut
-          data={chartData}
-          options={chartOptions}
-          width={250}
-          height={250}
-        />
-        <div className="mt-4 flex justify-around text-sm font-semibold text-gray-700">
-          <p>Còn trống: {availableRooms.length}</p>
-          <p>Đã thuê: {rentedRooms.length}</p>
+      <div className="grid grid-cols-2 gap-8">
+        <div className="bg-white rounded-2xl p-6 shadow-md w-fit">
+          <h2 className="text-xl font-bold mb-4">Tình trạng phòng</h2>
+          <Doughnut data={chartData} width={250} height={250} />
+          <div className="mt-4 flex justify-around text-sm font-semibold text-gray-700">
+            <p>Còn trống: {availableRooms.length}</p>
+            <p>Đã thuê: {rentedRooms.length}</p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl p-6 shadow-md w-full">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">Sử dụng điện & nước ({year})</h2>
+            <Select
+              value={year}
+              onChange={setYear}
+              options={Array.from({ length: 5 }, (_, i) => ({
+                label: currentYear - i,
+                value: currentYear - i,
+              }))}
+              style={{ width: 100 }}
+            />
+          </div>
+          {loading ? (
+            <div className="text-center py-8">
+              <Spin />
+            </div>
+          ) : (
+            <Line data={utilityChart} options={chartOptions} />
+          )}
         </div>
       </div>
     </div>
