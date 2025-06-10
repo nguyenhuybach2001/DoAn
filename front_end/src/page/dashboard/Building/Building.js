@@ -24,6 +24,7 @@ import { uploadImage } from "@/src/utils/uploadImage";
 import { deleteImage } from "@/src/utils/deleteImage";
 import { getListBuilding } from "@/src/redux/slices/buildingSlice";
 import { findLabelsFromValue } from "@/src/utils/filterAddress";
+import { getListRoomsByRole } from "@/src/redux/slices/roomSlice";
 
 export default function Building() {
   const dispatch = useDispatch();
@@ -46,6 +47,8 @@ export default function Building() {
       address: JSON.stringify(e.address),
       image: JSON.stringify(e.imageBuilding),
       isActive: dataBuilding?.isActive,
+      electricityPrice: e.electricityPrice,
+      waterPrice: e.waterPrice,
     };
 
     let res = null;
@@ -56,7 +59,9 @@ export default function Building() {
       res = await buildingApi.createBuilding(
         data.name,
         data.address,
-        data.image
+        data.image,
+        data.waterPrice,
+        data.electricityPrice
       );
     }
     if (res) {
@@ -112,6 +117,9 @@ export default function Building() {
       name: building.name,
       address: addressArray,
       imageBuilding: imageArray,
+      electricityPrice: building.electricityPrice,
+      waterPrice: building.waterPrice,
+      totalRoom: building.totalRoom,
     });
   };
 
@@ -119,6 +127,7 @@ export default function Building() {
     const res = await buildingApi.deleteBuilding(buildingId);
     if (res) {
       dispatch(getListBuilding());
+      dispatch(getListRoomsByRole());
     }
   };
 
@@ -126,6 +135,7 @@ export default function Building() {
     const res = await buildingApi.showBuilding(buildingId);
     if (res) {
       dispatch(getListBuilding());
+      dispatch(getListRoomsByRole());
     }
   };
 
@@ -175,6 +185,20 @@ export default function Building() {
             dataIndex: "totalRoom",
             key: "totalRoom",
             sorter: (a, b) => a.totalRoom - b.totalRoom,
+          },
+          {
+            title: "Giá điện (VND)",
+            dataIndex: "electricityPrice",
+            key: "electricityPrice",
+            sorter: (a, b) => a.electricityPrice - b.electricityPrice,
+            render: (price) => price?.toLocaleString("vi-VN") + " đ",
+          },
+          {
+            title: "Giá nước (VND)",
+            dataIndex: "waterPrice",
+            key: "waterPrice",
+            sorter: (a, b) => a.waterPrice - b.waterPrice,
+            render: (price) => price?.toLocaleString("vi-VN") + " đ",
           },
           {
             title: "Status",
@@ -230,12 +254,15 @@ export default function Building() {
             address: findLabelsFromValue(dataProvince, JSON.parse(val.address)),
             totalRoom: val.totalRoom,
             isActive: val.isActive,
+            electricityPrice: val.electricityPrice,
+            waterPrice: val.waterPrice,
             rawData: val,
           })) || []
         }
         pagination={{ pageSize: 8 }}
         rowClassName="hover:!bg-gray-100 transition-all"
       />
+
       <Modal
         open={openModal.open}
         onCancel={() => {
@@ -243,33 +270,65 @@ export default function Building() {
         }}
         footer={false}
         closeIcon={false}
-        title={openModal.mode == "create" ? "Create Building" : "Edit Building"}
+        title={
+          <h2 className="text-xl font-semibold">
+            {openModal.mode === "create" ? "Tạo toà nhà" : "Chỉnh sửa toà nhà"}
+          </h2>
+        }
       >
-        <Form form={form} onFinish={onFinish} layout="vertical">
+        <Form
+          form={form}
+          onFinish={onFinish}
+          layout="vertical"
+          className="space-y-4"
+        >
           <Form.Item
-            label="Name"
+            label={<span className="font-medium">Tên toà nhà</span>}
             name="name"
-            rules={[
-              {
-                required: true,
-                message: "Please input your name!",
-              },
-            ]}
+            rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
           >
-            <Input />
+            <Input
+              className="rounded-md p-2 shadow-sm"
+              placeholder="VD: Toà nhà A"
+            />
           </Form.Item>
+
           <Form.Item
-            label="Address"
+            label={<span className="font-medium">Địa chỉ</span>}
             name="address"
-            rules={[
-              {
-                required: true,
-                message: "Please input your name!",
-              },
-            ]}
+            rules={[{ required: true, message: "Vui lòng chọn địa chỉ!" }]}
           >
-            <Cascader options={dataProvince} />
+            <Cascader
+              options={dataProvince}
+              className="w-full"
+              placeholder="Chọn địa chỉ"
+            />
           </Form.Item>
+
+          <div className="grid grid-cols-2 gap-4">
+            <Form.Item
+              label={<span className="font-medium">Giá 1 số điện (VND)</span>}
+              name="electricityPrice"
+              rules={[{ required: true, message: "Vui lòng nhập giá điện!" }]}
+            >
+              <InputNumber
+                className="w-full rounded-md shadow-sm"
+                placeholder="VD: 3000"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label={<span className="font-medium">Giá 1 khối nước (VND)</span>}
+              name="waterPrice"
+              rules={[{ required: true, message: "Vui lòng nhập giá nước!" }]}
+            >
+              <InputNumber
+                className="w-full rounded-md shadow-sm"
+                placeholder="VD: 14000"
+              />
+            </Form.Item>
+          </div>
+
           <Form.Item
             name="imageBuilding"
             label="Upload"
@@ -314,11 +373,19 @@ export default function Building() {
               )}
             </Upload>
           </Form.Item>
+
           <Form.Item>
-            <Button htmlType="submit">Ok</Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="w-full mt-2 rounded-md"
+            >
+              {openModal.mode === "create" ? "Tạo toà nhà" : "Cập nhật"}
+            </Button>
           </Form.Item>
         </Form>
       </Modal>
+
       {previewImage && (
         <ImageAntd
           wrapperStyle={{ display: "none" }}

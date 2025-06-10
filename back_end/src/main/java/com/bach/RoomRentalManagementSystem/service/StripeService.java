@@ -26,7 +26,7 @@ public class StripeService {
 
     public PaymentIntent createPaymentIntent(Double amount, Long billId) throws StripeException {
 
-        long amountInCent = (long) (amount * 100);
+        long amountInCent = amount.longValue();
 
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                 .setAmount(amountInCent)

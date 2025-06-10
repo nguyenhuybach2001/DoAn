@@ -89,7 +89,7 @@ public class RoomController {
             return ResponseEntity.ok(Map.of("message", "Rooms show successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("error", "An error occurred while deleting the room"));
+                    .body(Map.of("error", e.getMessage()));
         }
     }
 

@@ -1,5 +1,6 @@
 package com.bach.RoomRentalManagementSystem.service;
 
+import com.bach.RoomRentalManagementSystem.dto.UserDto;
 import com.bach.RoomRentalManagementSystem.model.*;
 import com.bach.RoomRentalManagementSystem.repository.IMaintenanceExpensesRepository;
 import com.bach.RoomRentalManagementSystem.repository.IRentalContractRepository;
@@ -11,10 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
@@ -25,6 +23,8 @@ public class StatisticService {
     private final IMaintenanceExpensesRepository maintenanceExpensesRepository;
     private final IRentalContractRepository rentalContractRepository;
     private final IRoomUtilityRepository roomUtilityRepository;
+    private final UserService userService;
+
 
     // Thống kê tổng tiền thu từ hóa đơn dịch vụ trong khoảng thời gian
     public Double getTotalIncome(Date startDate, Date endDate, Long room_id, Long building_id) {
@@ -58,8 +58,6 @@ public class StatisticService {
     }
 
 
-
-
     // Thống kê tổng chi phí bảo trì trong khoảng thời gian
     public Double getTotalMaintenanceExpenses(Date startDate, Date endDate, Long room_id, Long building_id) {
         Specification<MaintenanceExpenses> spec = StatisticSpecificationsService.expensesHasPaidStatusAndDateBetween(startDate, endDate, room_id, building_id);
@@ -90,7 +88,6 @@ public class StatisticService {
         }
         return monthlyExpenses;
     }
-
 
 
     // Thống kê tổng thu nhập và chi phí bảo trì theo phòng
@@ -153,36 +150,119 @@ public class StatisticService {
     }
 
 
-
     // Thống kê điện nước tiêu thụ
     public Double getTotalUsage(Date startDate, Date endDate, Long room_id, Long building_id, String utilityType) {
-        Specification<RoomUtility> spec = StatisticSpecificationsService.totalUsage(startDate, endDate, room_id, building_id, RoomUtilityType.valueOf(utilityType));
+        Specification<RoomUtility> spec = StatisticSpecificationsService.totalUsage(startDate, endDate, room_id, building_id);
         List<RoomUtility> roomUtilities = roomUtilityRepository.findAll(spec);
 
         return roomUtilities.stream()
-                .mapToDouble(RoomUtility::getUsage)
+                .mapToDouble(ru -> {
+                    if ("ELECTRICITY".equalsIgnoreCase(utilityType)) {
+                        return ru.getUsage_electricity() != null ? ru.getUsage_electricity() : 0.0;
+                    } else if ("WATER".equalsIgnoreCase(utilityType)) {
+                        return ru.getUsage_water() != null ? ru.getUsage_water() : 0.0;
+                    } else {
+                        return 0.0;
+                    }
+                })
                 .sum();
     }
 
 
     // Số điện nước tiêu thụ theo tháng
-    public Map<String, Double> getTotalUsagePerMonth(int year, Long room_id, Long building_id, String utilityType) {
-        Map<String, Double> monthlyUsage = new HashMap<>();
+//    public Map<String, Double> getTotalUsagePerMonth(int year, Long room_id, Long building_id, String utilityType) {
+//        UserDto currentUser = userService.getCurrentUser();
+//        String role = currentUser.getRole().toString();
+//
+//        List<Long> roomIdsToQuery;
+//
+//        if ("STAFF".equals(role)) {
+//            // Lấy danh sách các room staff quản lý
+//            roomIdsToQuery = roomUtilityRepository.findRoomIdsByManagerId(currentUser.getId());
+//            if (roomIdsToQuery.isEmpty()) {
+//                return Collections.emptyMap(); // không quản lý phòng nào
+//            }
+//        } else {
+//            // Admin/Landlord có thể xem toàn bộ => truyền null để lọc tất cả
+//            roomIdsToQuery = null;
+//        }
+//
+//        Map<String, Double> monthlyUsage = new HashMap<>();
+//
+//        for (int month = 1; month <= 12; month++) {
+//            // Tính startDate và endDate cho tháng hiện tại
+//            Date startDate = Date.valueOf(year + "-" + String.format("%02d", month) + "-01");
+//            Date endDate = Date.valueOf(year + "-" + String.format("%02d", month) + "-31");
+//
+//            Specification<RoomUtility> spec = StatisticSpecificationsService.totalUsage(startDate, endDate, room_id, building_id);
+//            List<RoomUtility> roomUtilities = roomUtilityRepository.findAll(spec);
+//
+//            double totalUsage = roomUtilities.stream()
+//                    .mapToDouble(ru -> {
+//                        if ("ELECTRICITY".equalsIgnoreCase(utilityType)) {
+//                            return ru.getUsage_electricity() != null ? ru.getUsage_electricity() : 0.0;
+//                        } else if ("WATER".equalsIgnoreCase(utilityType)) {
+//                            return ru.getUsage_water() != null ? ru.getUsage_water() : 0.0;
+//                        } else {
+//                            return 0.0;
+//                        }
+//                    })
+//                    .sum();
+//
+//            monthlyUsage.put(String.format("%02d", month), totalUsage);
+//        }
+//        return monthlyUsage;
+//    }
+
+    public Map<String, Map<String, Double>> getTotalUsagePerMonth(int year, Long room_id, Long building_id) {
+        UserDto currentUser = userService.getCurrentUser();
+        String role = currentUser.getRole().toString();
+
+        List<Long> roomIdsToQuery;
+
+        if ("STAFF".equals(role)) {
+            // Lấy danh sách các room staff quản lý
+            roomIdsToQuery = roomUtilityRepository.findRoomIdsByManagerId(currentUser.getId());
+            if (roomIdsToQuery.isEmpty()) {
+                return Collections.emptyMap(); // không quản lý phòng nào
+            }
+        } else {
+            // Admin/Landlord có thể xem toàn bộ
+            roomIdsToQuery = null;
+        }
+
+        Map<String, Map<String, Double>> monthlyUsage = new HashMap<>();
 
         for (int month = 1; month <= 12; month++) {
-            // Tính startDate và endDate cho tháng hiện tại
             Date startDate = Date.valueOf(year + "-" + String.format("%02d", month) + "-01");
             Date endDate = Date.valueOf(year + "-" + String.format("%02d", month) + "-31");
 
-            Specification<RoomUtility> spec = StatisticSpecificationsService.totalUsage(startDate, endDate, room_id, building_id, RoomUtilityType.valueOf(utilityType));
+            Specification<RoomUtility> spec = StatisticSpecificationsService.totalUsage(startDate, endDate, room_id, building_id);
+
             List<RoomUtility> roomUtilities = roomUtilityRepository.findAll(spec);
 
-            double totalUsage = roomUtilities.stream()
-                    .mapToDouble(RoomUtility::getUsage)
+            // Nếu là staff, cần lọc thêm theo roomIdsToQuery
+            if (roomIdsToQuery != null) {
+                roomUtilities = roomUtilities.stream()
+                        .filter(ru -> roomIdsToQuery.contains(ru.getRoom().getRoomId()))
+                        .toList();
+            }
+
+            double totalElectricity = roomUtilities.stream()
+                    .mapToDouble(ru -> ru.getUsage_electricity() != null ? ru.getUsage_electricity() : 0.0)
                     .sum();
 
-            monthlyUsage.put(String.format("%02d", month), totalUsage);
+            double totalWater = roomUtilities.stream()
+                    .mapToDouble(ru -> ru.getUsage_water() != null ? ru.getUsage_water() : 0.0)
+                    .sum();
+
+            Map<String, Double> usageMap = new HashMap<>();
+            usageMap.put("electricity", totalElectricity);
+            usageMap.put("water", totalWater);
+
+            monthlyUsage.put(String.format("%02d", month), usageMap);
         }
+
         return monthlyUsage;
     }
 

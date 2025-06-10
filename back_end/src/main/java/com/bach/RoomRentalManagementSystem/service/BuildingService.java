@@ -4,8 +4,11 @@ package com.bach.RoomRentalManagementSystem.service;
 import com.bach.RoomRentalManagementSystem.dto.BuildingDto;
 import com.bach.RoomRentalManagementSystem.dto.UserDto;
 import com.bach.RoomRentalManagementSystem.model.Building;
+import com.bach.RoomRentalManagementSystem.model.ContractStatus;
+import com.bach.RoomRentalManagementSystem.model.Room;
 import com.bach.RoomRentalManagementSystem.model.User;
 import com.bach.RoomRentalManagementSystem.repository.IBuildingRepository;
+import com.bach.RoomRentalManagementSystem.repository.IRoomRepository;
 import com.bach.RoomRentalManagementSystem.repository.IUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +20,7 @@ import java.util.*;
 @Transactional
 @RequiredArgsConstructor
 public class BuildingService {
-
+    private final IRoomRepository iRoomRepository;
     private final IBuildingRepository iBuildingRepository;
     private final IUserRepository iUserRepository;
 
@@ -40,7 +43,13 @@ public class BuildingService {
         Building building = iBuildingRepository.findById(buildingDto.getId())
                 .orElseThrow(() -> new RuntimeException("Building not found"));
 
+        int currentTotalRoom = building.getTotalRooms();
+
+        // Gán các giá trị từ DTO sang entity
         mapToBuilding(buildingDto, building);
+
+        // Gán lại totalRoom cũ (tránh bị ghi đè)
+        building.setTotalRooms(currentTotalRoom);
 
         iBuildingRepository.save(building);
 
@@ -71,16 +80,32 @@ public class BuildingService {
 
         Building building = iBuildingRepository.findById(building_id)
                 .orElseThrow(() -> new RuntimeException("Building not found"));
+        List<Room> roomList = iRoomRepository.findByBuilding_BuildingId(building_id);
 
+        boolean hasActiveContract = roomList.stream().anyMatch(room ->
+                room.getRentalContracts().stream().anyMatch(contract ->
+                        contract.getStatus() == ContractStatus.IN_PROGRESS
+                )
+        );
+
+        if (hasActiveContract) {
+            throw new RuntimeException("Không thể ẩn tòa nhà vì có phòng đang có hợp đồng hoạt động.");
+        }
         building.setIsActive(false);
 
         iBuildingRepository.save(building);
 
+        for (Room room : roomList) {
+            room.setIsActive(false);
+        }
+        iRoomRepository.saveAll(roomList);
         response.put("message", "Building deleted successfully");
         response.put("status", "success");
 
         return response;
-    }public Map<String, String> showBuildingService(Long building_id) {
+    }
+
+    public Map<String, String> showBuildingService(Long building_id) {
         Map<String, String> response = new HashMap<>();
 
         Building building = iBuildingRepository.findById(building_id)
@@ -89,7 +114,11 @@ public class BuildingService {
         building.setIsActive(true);
 
         iBuildingRepository.save(building);
-
+        List<Room> rooms = iRoomRepository.findByBuilding_BuildingId(building_id);
+        for (Room room : rooms) {
+            room.setIsActive(true);
+        }
+        iRoomRepository.saveAll(rooms);
         response.put("message", "Building deleted successfully");
         response.put("status", "success");
 
@@ -99,15 +128,15 @@ public class BuildingService {
     public List<BuildingDto> getListOfBuildingByAdmin() {
         List<BuildingDto> buildingDtos = new ArrayList<>();
 
-            List<Building> buildings = iBuildingRepository.findAll();
-            for (Building building : buildings) {
+        List<Building> buildings = iBuildingRepository.findAll();
+        for (Building building : buildings) {
 
-                BuildingDto dto = mapToDto(building);
+            BuildingDto dto = mapToDto(building);
 
-                buildingDtos.add(dto);
-            }
-            return buildingDtos;
+            buildingDtos.add(dto);
         }
+        return buildingDtos;
+    }
 
 //    public List<BuildingDto> getListOfBuildingByStaff(Long staff_id) {
 //        List<BuildingDto> buildingDtos = new ArrayList<>();
@@ -128,6 +157,9 @@ public class BuildingService {
         building.setAddress(buildingDto.getAddress());
         building.setImage(buildingDto.getImage());
         building.setTotalRooms(buildingDto.getTotalRoom());
+        building.setElectricityPrice(buildingDto.getElectricityPrice());
+        building.setWaterPrice(buildingDto.getWaterPrice());
+
         return building;
     }
 
@@ -137,6 +169,9 @@ public class BuildingService {
         building.setImage(buildingDto.getImage());
         building.setTotalRooms(buildingDto.getTotalRoom());
         building.setIsActive(buildingDto.getIsActive());
+        building.setElectricityPrice(buildingDto.getElectricityPrice());
+        building.setWaterPrice(buildingDto.getWaterPrice());
+
     }
 
     private BuildingDto mapToDto(Building building) {
@@ -147,6 +182,8 @@ public class BuildingService {
                 .totalRoom(building.getTotalRooms())
                 .image(building.getImage())
                 .isActive(building.getIsActive())
+                .electricityPrice(building.getElectricityPrice())
+                .waterPrice(building.getWaterPrice())
                 .build();
     }
 

@@ -36,10 +36,13 @@ public class StatisticController {
 
     @GetMapping("/admin/statistic/service-bill/monthly")
     public ResponseEntity<?> calculateTotalIncomePerMonth(
-            @RequestParam int year,
+            @RequestParam(required = false) Integer year,
             @RequestParam(required = false) Long room_id,
             @RequestParam(required = false) Long building_id) {
         try {
+            if (year == null) {
+                year = java.time.LocalDate.now().getYear();
+            }
             Map<String, Double> monthlyIncome = statisticService.getTotalIncomePerMonth(year, room_id, building_id);
             Map<String, Double> sortedMonthlyIncome = new TreeMap<>(monthlyIncome);
             return ResponseEntity.ok(sortedMonthlyIncome);
@@ -67,10 +70,13 @@ public class StatisticController {
 
     @GetMapping("/admin/statistic/expenses/monthly")
     public ResponseEntity<?> calculateTotalMaintenanceExpensesPerMonth(
-            @RequestParam int year,
+            @RequestParam(required = false) Integer year,
             @RequestParam(required = false) Long room_id,
             @RequestParam(required = false) Long building_id) {
         try {
+            if (year == null) {
+                year = java.time.LocalDate.now().getYear();
+            }
             Map<String, Double> response = statisticService.getTotalMaintenanceExpensesPerMonth(year, room_id, building_id);
             Map<String, Double> sortedMonthlyExpenses = new TreeMap<>(response);
             return ResponseEntity.ok(sortedMonthlyExpenses);
@@ -98,10 +104,13 @@ public class StatisticController {
 
     @GetMapping("/admin/statistic/profit/monthly")
     public ResponseEntity<?> calculateProfitPerMonth(
-            @RequestParam int year,
+            @RequestParam(required = false) Integer year,
             @RequestParam(required = false) Long room_id,
             @RequestParam(required = false) Long building_id) {
         try {
+            if (year == null) {
+                year = java.time.LocalDate.now().getYear();
+            }
             Map<String, Double> response = statisticService.getProfitPerMonth(year, room_id, building_id);
             Map<String, Double> sortedMonthlyProfit = new TreeMap<>(response);
             return ResponseEntity.ok(sortedMonthlyProfit);
@@ -130,11 +139,14 @@ public class StatisticController {
 
     @GetMapping("/admin/statistic/contracts/monthly")
     public ResponseEntity<?> calculateContractsPerMonth(
-            @RequestParam int year,
+            @RequestParam(required = false) Integer year,
             @RequestParam(required = false) Long room_id,
             @RequestParam(required = false) Long building_id,
             @RequestParam(required = false) String status) {
         try {
+            if (year == null) {
+                year = java.time.LocalDate.now().getYear();
+            }
             Map<String, Integer> response = statisticService.getContractsPerMonth(year, room_id, building_id, status);
             Map<String, Integer> sortedMonthlyContracts = new TreeMap<>(response);
             return ResponseEntity.ok(sortedMonthlyContracts);
@@ -161,20 +173,45 @@ public class StatisticController {
         }
     }
 
-    @GetMapping("/admin/statistic/usage/monthly")
+    //    @GetMapping("/auth/statistic/usage/monthly")
+//    public ResponseEntity<?> calculateUsagePerMonth(
+//            @RequestParam(required = false) Integer year,
+//            @RequestParam(required = false) Long room_id,
+//            @RequestParam(required = false) Long building_id,
+//            @RequestParam String utilityType) {
+//        try {
+//            if (year == null) {
+//                year = java.time.LocalDate.now().getYear();
+//            }
+//            Map<String, Double> response = statisticService.getTotalUsagePerMonth(year, room_id, building_id, utilityType);
+//            Map<String, Double> sortedMonthlyUsage = new TreeMap<>(response);
+//            return ResponseEntity.ok(sortedMonthlyUsage);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body(Map.of("error", e.getMessage()));
+//        }
+//    }
+    @GetMapping("/auth/statistic/usage/monthly")
     public ResponseEntity<?> calculateUsagePerMonth(
-            @RequestParam int year,
+            @RequestParam(required = false) Integer year,
             @RequestParam(required = false) Long room_id,
-            @RequestParam(required = false) Long building_id,
-            @RequestParam String utilityType) {
+            @RequestParam(required = false) Long building_id) {
         try {
-            Map<String, Double> response = statisticService.getTotalUsagePerMonth(year, room_id, building_id, utilityType);
-            Map<String, Double> sortedMonthlyUsage = new TreeMap<>(response);
+            if (year == null) {
+                year = java.time.LocalDate.now().getYear();
+            }
+
+            Map<String, Map<String, Double>> response = statisticService.getTotalUsagePerMonth(year, room_id, building_id);
+
+            // Sắp xếp theo tháng
+            Map<String, Map<String, Double>> sortedMonthlyUsage = new TreeMap<>(response);
+
             return ResponseEntity.ok(sortedMonthlyUsage);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(Map.of("error", e.getMessage()));
         }
     }
+
 
 }

@@ -11,8 +11,8 @@ public class RoomUtilityDto {
 
     private Long id;
     private Date date;
-    private Double usage;
-    private RoomUtilityType utilityType;
+    private Double usage_electricity;
+    private Double usage_water;
     private String room_number;
     private Long building_id;
 }

@@ -10,6 +10,8 @@ import com.bach.RoomRentalManagementSystem.repository.IRentalContractRepository;
 import com.bach.RoomRentalManagementSystem.repository.IRoomRepository;
 import com.bach.RoomRentalManagementSystem.repository.IUserRepository;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
@@ -145,6 +148,10 @@ public class RoomService {
             throw new NoSuchElementException("No rooms found with the provided IDs.");
         }
         for (Room room : rooms) {
+            if (!room.getBuilding().getIsActive()) {
+                throw new IllegalStateException("Không thể mở phòng " + room.getRoomNumber()
+                        + " vì tòa nhà " + room.getBuilding().getName() + " đang bị ẩn.");
+            }
             room.setIsActive(true);
         }
         roomRepository.saveAll(rooms);
@@ -208,6 +215,17 @@ public class RoomService {
 
             if (currentUser == null || currentUser.getRole().toString().equals("CUSTOMER")) {
                 predicates.add(builder.isTrue(root.get("isActive")));
+                Subquery<Long> contractSubquery = query.subquery(Long.class);
+                Root<RentalContract> contractRoot = contractSubquery.from(RentalContract.class);
+                contractSubquery.select(contractRoot.get("room").get("roomId"));
+                contractSubquery.where(
+                        builder.equal(contractRoot.get("customer").get("id"), currentUser.getId())
+//                        builder.equal(contractRoot.get("status"), ContractStatus.EXPIRED),
+//                        builder.lessThanOrEqualTo(contractRoot.get("startDate"), LocalDate.now()),
+//                        builder.greaterThanOrEqualTo(contractRoot.get("endDate"), LocalDate.now())
+                );
+
+                predicates.add(root.get("roomId").in(contractSubquery));
             } else if (currentUser.getRole().toString().equals("STAFF")) {
                 predicates.add(builder.equal(root.get("staff").get("id"), currentUser.getId()));
                 predicates.add(builder.isTrue(root.get("isActive")));

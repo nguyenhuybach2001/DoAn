@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplicationTests" time="25.158" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplicationTests" time="39.482" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -31,7 +31,7 @@
     <property name="java.home" value="C:\Program Files\Java\jdk-17"/>
     <property name="file.separator" value="\"/>
     <property name="basedir" value="C:\Users\BachNguyen\Desktop\DoAn\DoAn\back_end"/>
-    <property name="java.vm.compressedOopsMode" value="32-bit"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
     <property name="line.separator" value="&#10;"/>
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
@@ -58,11 +58,11 @@
     <property name="os.arch" value="amd64"/>
     <property name="maven.multiModuleProjectDirectory" value="C:\Users\BachNguyen\Desktop\DoAn\DoAn\back_end"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="PID" value="23172"/>
+    <property name="PID" value="13156"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="CONSOLE_LOG_CHARSET" value="windows-1252"/>
     <property name="native.encoding" value="Cp1252"/>
-    <property name="java.library.path" value="C:\Program Files\Java\jdk-17\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;C:\Users\BachNguyen\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Program Files\Java\jdk-17\bin;C:\apache-maven-3.9.9\bin;;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Cloudflare\Cloudflare WARP\;C:\Users\BachNguyen\AppData\Local\Programs\Python\Python310\Scripts\;C:\Users\BachNguyen\AppData\Local\Programs\Python\Python310\;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\BachNguyen\AppData\Local\Microsoft\WindowsApps;C:\Users\BachNguyen\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\BachNguyen\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3.5\bin;;C:\Program Files\JetBrains\PyCharm 2025.1\bin;;."/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk-17\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;C:\Users\BachNguyen\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\MySQL\MySQL Server 8.0\bin;C:\Program Files\Java\jdk-17\bin;C:\apache-maven-3.9.9\bin;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Cloudflare\Cloudflare WARP\;C:\Users\BachNguyen\Desktop\DoAn\;C:\Users\BachNguyen\AppData\Local\Programs\Python\Python310\Scripts\;C:\Users\BachNguyen\AppData\Local\Programs\Python\Python310\;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\BachNguyen\AppData\Local\Microsoft\WindowsApps;C:\Users\BachNguyen\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\BachNguyen\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2024.3.5\bin;;C:\Program Files\JetBrains\PyCharm 2025.1\bin;;;."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
     <property name="java.vendor" value="Oracle Corporation"/>
     <property name="java.vm.version" value="17.0.12+8-LTS-286"/>
@@ -72,15 +72,15 @@
     <property name="java.class.version" value="61.0"/>
     <property name="CONSOLE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} - %msg%n"/>
   </properties>
-  <testcase name="contextLoads" classname="com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplicationTests" time="0.566">
-    <system-out><![CDATA[21:44:29.018 [main] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [RoomRentalManagementSystemApplicationTests]: using SpringBootContextLoader
-21:44:29.047 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplicationTests]: no resource found for suffixes {-context.xml, Context.groovy}.
-21:44:29.052 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplicationTests]: RoomRentalManagementSystemApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-21:44:29.135 [main] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using ContextCustomizers for test class [RoomRentalManagementSystemApplicationTests]: [ExcludeFilterContextCustomizer, DuplicateJsonObjectContextCustomizer, MockitoContextCustomizer, TestRestTemplateContextCustomizer, DisableObservabilityContextCustomizer, PropertyMappingContextCustomizer, Customizer]
-21:44:29.368 [main] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [C:\Users\BachNguyen\Desktop\DoAn\DoAn\back_end\target\classes\com\bach\RoomRentalManagementSystem\RoomRentalManagementSystemApplication.class]
-21:44:29.384 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplication for test class com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplicationTests
-21:44:29.801 [main] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners for test class [RoomRentalManagementSystemApplicationTests]: [ServletTestExecutionListener, DirtiesContextBeforeModesTestExecutionListener, ApplicationEventsTestExecutionListener, MockitoTestExecutionListener, DependencyInjectionTestExecutionListener, DirtiesContextTestExecutionListener, TransactionalTestExecutionListener, SqlScriptsTestExecutionListener, EventPublishingTestExecutionListener, WithSecurityContextTestExecutionListener, ReactorContextTestExecutionListener, ResetMocksTestExecutionListener, RestDocsTestExecutionListener, MockRestServiceServerResetTestExecutionListener, MockMvcPrintOnlyOnFailureTestExecutionListener, WebDriverTestExecutionListener, MockWebServiceServerTestExecutionListener]
-21:44:29.801 [main] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: class [RoomRentalManagementSystemApplicationTests], class annotated with @DirtiesContext [false] with mode [null]
+  <testcase name="contextLoads" classname="com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplicationTests" time="0.987">
+    <system-out><![CDATA[08:51:58.934 [main] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [RoomRentalManagementSystemApplicationTests]: using SpringBootContextLoader
+08:51:58.971 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplicationTests]: no resource found for suffixes {-context.xml, Context.groovy}.
+08:51:58.975 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplicationTests]: RoomRentalManagementSystemApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+08:51:59.133 [main] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using ContextCustomizers for test class [RoomRentalManagementSystemApplicationTests]: [ExcludeFilterContextCustomizer, DuplicateJsonObjectContextCustomizer, MockitoContextCustomizer, TestRestTemplateContextCustomizer, DisableObservabilityContextCustomizer, PropertyMappingContextCustomizer, Customizer]
+08:51:59.499 [main] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [C:\Users\BachNguyen\Desktop\DoAn\DoAn\back_end\target\classes\com\bach\RoomRentalManagementSystem\RoomRentalManagementSystemApplication.class]
+08:51:59.505 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplication for test class com.bach.RoomRentalManagementSystem.RoomRentalManagementSystemApplicationTests
+08:52:00.037 [main] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners for test class [RoomRentalManagementSystemApplicationTests]: [ServletTestExecutionListener, DirtiesContextBeforeModesTestExecutionListener, ApplicationEventsTestExecutionListener, MockitoTestExecutionListener, DependencyInjectionTestExecutionListener, DirtiesContextTestExecutionListener, TransactionalTestExecutionListener, SqlScriptsTestExecutionListener, EventPublishingTestExecutionListener, WithSecurityContextTestExecutionListener, ReactorContextTestExecutionListener, ResetMocksTestExecutionListener, RestDocsTestExecutionListener, MockRestServiceServerResetTestExecutionListener, MockMvcPrintOnlyOnFailureTestExecutionListener, WebDriverTestExecutionListener, MockWebServiceServerTestExecutionListener]
+08:52:00.045 [main] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: class [RoomRentalManagementSystemApplicationTests], class annotated with @DirtiesContext [false] with mode [null]
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -90,25 +90,25 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v3.0.2)
 
-2025-05-15 21:44:31 - Starting RoomRentalManagementSystemApplicationTests using Java 17.0.12 with PID 23172 (started by BachNguyen in C:\Users\BachNguyen\Desktop\DoAn\DoAn\back_end)
-2025-05-15 21:44:31 - No active profile set, falling back to 1 default profile: "default"
-2025-05-15 21:44:36 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-05-15 21:44:37 - Finished Spring Data repository scanning in 408 ms. Found 14 JPA repository interfaces.
-2025-05-15 21:44:39 - HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-05-15 21:44:39 - HHH000412: Hibernate ORM core version 6.1.6.Final
-2025-05-15 21:44:40 - HHH90000021: Encountered deprecated setting [javax.persistence.sharedCache.mode], use [jakarta.persistence.sharedCache.mode] instead
-2025-05-15 21:44:40 - HikariPool-1 - Starting...
-2025-05-15 21:44:41 - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@190f7d7b
-2025-05-15 21:44:41 - HikariPool-1 - Start completed.
-2025-05-15 21:44:41 - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2025-05-15 21:44:45 - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2025-05-15 21:44:45 - Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-05-15 21:44:50 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-05-15 21:44:51 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4a7da637, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4c8a685f, org.springframework.security.web.context.SecurityContextHolderFilter@3156b15, org.springframework.security.web.header.HeaderWriterFilter@797c062, org.springframework.web.filter.CorsFilter@7baefffe, org.springframework.security.web.authentication.logout.LogoutFilter@1208c50, com.bach.RoomRentalManagementSystem.security.JwtAuthenticationFilter@47cf3666, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1fb56a2, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@406803b9, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7914fe0b, org.springframework.security.web.session.SessionManagementFilter@4d6440e0, org.springframework.security.web.access.ExceptionTranslationFilter@55bccad6, org.springframework.security.web.access.intercept.AuthorizationFilter@2b05ae81]
-2025-05-15 21:44:52 - Starting...
-2025-05-15 21:44:52 - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@54c5bb64]]
-2025-05-15 21:44:52 - Started.
-2025-05-15 21:44:53 - Started RoomRentalManagementSystemApplicationTests in 23.042 seconds (process running for 57.599)
+2025-05-23 08:52:02 - Starting RoomRentalManagementSystemApplicationTests using Java 17.0.12 with PID 13156 (started by BachNguyen in C:\Users\BachNguyen\Desktop\DoAn\DoAn\back_end)
+2025-05-23 08:52:02 - No active profile set, falling back to 1 default profile: "default"
+2025-05-23 08:52:07 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-23 08:52:08 - Finished Spring Data repository scanning in 481 ms. Found 14 JPA repository interfaces.
+2025-05-23 08:52:10 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-23 08:52:11 - HHH000412: Hibernate ORM core version 6.1.6.Final
+2025-05-23 08:52:12 - HHH90000021: Encountered deprecated setting [javax.persistence.sharedCache.mode], use [jakarta.persistence.sharedCache.mode] instead
+2025-05-23 08:52:13 - HikariPool-1 - Starting...
+2025-05-23 08:52:14 - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6a42a3ba
+2025-05-23 08:52:14 - HikariPool-1 - Start completed.
+2025-05-23 08:52:14 - HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2025-05-23 08:52:22 - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-05-23 08:52:22 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-23 08:52:30 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-23 08:52:33 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@11baa5af, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@37cf40c9, org.springframework.security.web.context.SecurityContextHolderFilter@167fd0d1, org.springframework.security.web.header.HeaderWriterFilter@f37e059, org.springframework.web.filter.CorsFilter@1079337, org.springframework.security.web.authentication.logout.LogoutFilter@410e3cd5, com.bach.RoomRentalManagementSystem.security.JwtAuthenticationFilter@4e8f4153, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2dde085e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@522d4bcb, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@114e7f60, org.springframework.security.web.session.SessionManagementFilter@4b5c881e, org.springframework.security.web.access.ExceptionTranslationFilter@347cf446, org.springframework.security.web.access.intercept.AuthorizationFilter@6340cf5]
+2025-05-23 08:52:36 - Starting...
+2025-05-23 08:52:36 - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@5595cf14]]
+2025-05-23 08:52:36 - Started.
+2025-05-23 08:52:36 - Started RoomRentalManagementSystemApplicationTests in 35.896 seconds (process running for 70.275)
 ]]></system-out>
   </testcase>
 </testsuite>

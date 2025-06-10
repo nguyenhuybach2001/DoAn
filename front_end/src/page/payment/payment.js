@@ -1,5 +1,6 @@
 "use client";
 import paymentApi from "@/src/api/paymentApi";
+import { CloseOutlined } from "@ant-design/icons";
 import {
   Elements,
   PaymentElement,
@@ -8,6 +9,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Button } from "antd";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -44,18 +46,25 @@ function CheckoutForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-4">
       <PaymentElement />
-      <Button htmlType="submit" disabled={!stripe || isLoading}>
-        {isLoading ? "Đang xử lý..." : "Thanh toán"}
+      <Button
+        htmlType="submit"
+        type="primary"
+        loading={isLoading}
+        disabled={!stripe || isLoading}
+        className="w-full"
+      >
+        {isLoading ? "Đang xử lý..." : "Thanh toán ngay"}
       </Button>
-      {message && <div>{message}</div>}
+      {message && <p className="text-center text-red-500">{message}</p>}
     </form>
   );
 }
 
 export default function PaymentPage() {
   const [clientSecret, setClientSecret] = useState("");
+  const router = useRouter();
   const { currentBill } = useSelector((state) => state.serviceBill);
   useEffect(() => {
     const fetchClientSecret = async () => {
@@ -88,23 +97,50 @@ export default function PaymentPage() {
     OTHERS: "Dịch vụ khác",
   };
   return (
-    <div className="p-4 bg-white h-screen">
-      <div className="grid grid-cols-2">
-        <div>
-          <p>
-            {serviceNameMap[currentBill.service] || "Dịch vụ không xác định"}
-          </p>
-          <p>Thời gian: {currentBill.date}</p>
-          <p>Phòng: {currentBill.room_number}</p>
-          <p>Số tiền: {currentBill.amount}</p>
+    <div className=" bg-gray-100 flex items-center justify-center p-6">
+      <div className="bg-gray-300 rounded-full w-10 flex justify-center items-center h-10 border-2 border-solid absolute top-5 left-5 cursor-pointer">
+        <CloseOutlined
+          className="font-bold text-xl"
+          onClick={() => {
+            router.push("/home");
+          }}
+        />
+      </div>
+      <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-3xl">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
+          Xác nhận thanh toán
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Thông tin hóa đơn */}
+          <div className="space-y-3 text-gray-700">
+            <p>
+              <strong>Dịch vụ:</strong>{" "}
+              {serviceNameMap[currentBill?.service] || "Dịch vụ không xác định"}
+            </p>
+            <p>
+              <strong>Thời gian:</strong> {currentBill?.date}
+            </p>
+            <p>
+              <strong>Phòng:</strong> {currentBill?.room_number}
+            </p>
+            <p>
+              <strong>Số tiền:</strong>{" "}
+              {Number(currentBill?.amount).toLocaleString()} VND
+            </p>
+          </div>
+
+          {/* Form thanh toán */}
+          <div className="bg-gray-50 p-4 rounded-xl border">
+            {clientSecret ? (
+              <Elements stripe={stripePromise} options={options}>
+                <CheckoutForm />
+              </Elements>
+            ) : (
+              <p className="text-center">Đang tải thông tin thanh toán...</p>
+            )}
+          </div>
         </div>
-        {clientSecret ? (
-          <Elements stripe={stripePromise} options={options}>
-            <CheckoutForm />
-          </Elements>
-        ) : (
-          <p>Đang tải thông tin thanh toán...</p>
-        )}
       </div>
     </div>
   );

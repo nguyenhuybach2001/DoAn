@@ -4,7 +4,9 @@ const statisticApi = {
   //  Doanh thu dịch vụ
   getTotalIncome: async (params) => {
     try {
-      const response = await axiosClient.get("/admin/statistic/service-bill", { params });
+      const response = await axiosClient.get("/admin/statistic/service-bill", {
+        params,
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching total income:", error);
@@ -14,9 +16,12 @@ const statisticApi = {
 
   getTotalIncomePerMonth: async ({ year, room_id, building_id }) => {
     try {
-      const response = await axiosClient.get("/admin/statistic/service-bill/monthly", {
-        params: { year, room_id, building_id },
-      });
+      const response = await axiosClient.get(
+        "/admin/statistic/service-bill/monthly",
+        {
+          params: { year, room_id, building_id },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetching income per month:", error);
@@ -27,7 +32,9 @@ const statisticApi = {
   //  Chi phí bảo trì
   getTotalExpenses: async (params) => {
     try {
-      const response = await axiosClient.get("/admin/statistic/expenses", { params });
+      const response = await axiosClient.get("/admin/statistic/expenses", {
+        params,
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching total expenses:", error);
@@ -37,9 +44,12 @@ const statisticApi = {
 
   getTotalExpensesPerMonth: async ({ year, room_id, building_id }) => {
     try {
-      const response = await axiosClient.get("/admin/statistic/expenses/monthly", {
-        params: { year, room_id, building_id },
-      });
+      const response = await axiosClient.get(
+        "/admin/statistic/expenses/monthly",
+        {
+          params: { year, room_id, building_id },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetching expenses per month:", error);
@@ -50,7 +60,9 @@ const statisticApi = {
   // 💰 Lợi nhuận
   getProfit: async (params) => {
     try {
-      const response = await axiosClient.get("/admin/statistic/profit", { params });
+      const response = await axiosClient.get("/admin/statistic/profit", {
+        params,
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching profit:", error);
@@ -60,9 +72,12 @@ const statisticApi = {
 
   getProfitPerMonth: async ({ year, room_id, building_id }) => {
     try {
-      const response = await axiosClient.get("/admin/statistic/profit/monthly", {
-        params: { year, room_id, building_id },
-      });
+      const response = await axiosClient.get(
+        "/admin/statistic/profit/monthly",
+        {
+          params: { year, room_id, building_id },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetching profit per month:", error);
@@ -73,7 +88,9 @@ const statisticApi = {
   // 📄 Số lượng hợp đồng
   getContractQuantity: async (params) => {
     try {
-      const response = await axiosClient.get("/admin/statistic/contracts", { params });
+      const response = await axiosClient.get("/admin/statistic/contracts", {
+        params,
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching contract quantity:", error);
@@ -83,9 +100,12 @@ const statisticApi = {
 
   getContractsPerMonth: async ({ year, room_id, building_id, status }) => {
     try {
-      const response = await axiosClient.get("/admin/statistic/contracts/monthly", {
-        params: { year, room_id, building_id, status },
-      });
+      const response = await axiosClient.get(
+        "/admin/statistic/contracts/monthly",
+        {
+          params: { year, room_id, building_id, status },
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetching contracts per month:", error);
@@ -96,7 +116,9 @@ const statisticApi = {
   // ⚡ Sử dụng tiện ích
   getUtilityUsage: async (params) => {
     try {
-      const response = await axiosClient.get("/admin/statistic/usage", { params });
+      const response = await axiosClient.get("/admin/statistic/usage", {
+        params,
+      });
       return response.data;
     } catch (error) {
       console.error("Error fetching utility usage:", error);
@@ -104,10 +126,15 @@ const statisticApi = {
     }
   },
 
-  getUtilityUsagePerMonth: async ({ year, room_id, building_id, utilityType }) => {
+  getUtilityUsagePerMonth: async ({ year, room_id, building_id }) => {
+    console.log("Fetching utility usage per month with params:", {
+      year,
+      room_id,
+      building_id,
+    });
     try {
       const response = await axiosClient.get("/auth/statistic/usage/monthly", {
-        params: { year, room_id, building_id, utilityType },
+        params: { year, room_id, building_id },
       });
       return response.data;
     } catch (error) {

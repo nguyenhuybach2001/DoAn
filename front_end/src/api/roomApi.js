@@ -1,3 +1,4 @@
+import { message } from "antd";
 import axiosClient from "./baseApi";
 
 const roomApi = {
@@ -29,8 +30,17 @@ const roomApi = {
 
   // Hiện phòng (giả sử là bật trạng thái active lên)
   showRoom: async (roomIds) => {
-    const response = await axiosClient.put("/admin/rooms", roomIds);
-    return response.data;
+    try {
+      const response = await axiosClient.put("/admin/rooms", roomIds);
+      return response.data;
+    } catch (error) {
+      const msg =
+        error?.response?.data?.error ||
+        error?.response?.data?.message || // Nếu backend trả về `message`
+        error?.message ||
+        "Đã có lỗi xảy ra khi mở phòng.";
+      message.error(msg);
+    }
   },
 
   // Lấy danh sách phòng (theo filter hoặc buildingId)

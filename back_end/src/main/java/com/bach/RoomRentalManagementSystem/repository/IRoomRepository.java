@@ -15,6 +15,8 @@ import java.util.Optional;
 public interface IRoomRepository extends JpaRepository<Room, Long>, JpaSpecificationExecutor<Room> {
     Page<Room> findByBuildingBuildingId(Long buildingId, Pageable pageable);
 
+    List<Room> findByBuilding_BuildingId(Long buildingId);
+
     @Query("SELECT r FROM Room r WHERE r.building.buildingId = :buildingId AND r.roomNumber = :roomNumber AND r.isActive = true AND r.building.isActive = true")
     Optional<Room> findByBuildingBuildingIdAndRoomNumber(@Param("buildingId") Long buildingId, @Param("roomNumber") String roomNumber);
 

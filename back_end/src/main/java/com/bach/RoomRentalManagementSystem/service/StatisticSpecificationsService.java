@@ -28,7 +28,7 @@ public class StatisticSpecificationsService {
                 predicates.add(cb.lessThanOrEqualTo(root.get("date"), endDate));
             }
 
-            if (room_id !=null && building_id != null) {
+            if (room_id != null && building_id != null) {
                 throw new RuntimeException("Không được truyền đồng thời room_id và building_id");
             }
 
@@ -58,7 +58,7 @@ public class StatisticSpecificationsService {
                 predicates.add(cb.lessThanOrEqualTo(root.get("date"), endDate));
             }
 
-            if (room_id !=null && building_id != null) {
+            if (room_id != null && building_id != null) {
                 throw new RuntimeException("Không được truyền đồng thời room_id và building_id");
             }
 
@@ -90,7 +90,7 @@ public class StatisticSpecificationsService {
                 predicates.add(cb.lessThanOrEqualTo(root.get("date"), endDate));
             }
 
-            if (room_id !=null && building_id != null) {
+            if (room_id != null && building_id != null) {
                 throw new RuntimeException("Không được truyền đồng thời room_id và building_id");
             }
 
@@ -106,11 +106,10 @@ public class StatisticSpecificationsService {
         };
     }
 
-    public static Specification<RoomUtility> totalUsage(Date startDate, Date endDate, Long room_id, Long building_id, RoomUtilityType utilityType) {
+    public static Specification<RoomUtility> totalUsage(Date startDate, Date endDate, Long room_id, Long building_id) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            predicates.add(cb.equal(root.get("utilityType"), utilityType));
 
             if (startDate != null && endDate != null) {
                 predicates.add(cb.between(root.get("date"), startDate, endDate));
@@ -120,7 +119,7 @@ public class StatisticSpecificationsService {
                 predicates.add(cb.lessThanOrEqualTo(root.get("date"), endDate));
             }
 
-            if (room_id !=null && building_id != null) {
+            if (room_id != null && building_id != null) {
                 throw new RuntimeException("Không được truyền đồng thời room_id và building_id");
             }
 

@@ -131,15 +131,14 @@ export default function Bills() {
           amount: usage_electricity * 3000 + usage_water * 14000,
         };
       });
-      try {
-        await roomUtilityApi.create(allBills);
+
+      const res = await roomUtilityApi.create(allBills);
+      if (res) {
         message.success("Tạo hóa đơn thành công");
         setIsModalOpen(false);
         setSelectedRooms([]);
         form.resetFields();
-        fetchBills();
-      } catch {
-        message.error("Tạo hóa đơn thất bại");
+        dispatch(getUtilityUsagePerMonth({ year }));
       }
     });
   };
@@ -210,7 +209,7 @@ export default function Bills() {
       </div>
 
       <Modal
-        style={{ top: 20 }}
+        style={selectedRooms.length > 0 ? { top: 20 } : {}}
         title="Tạo hóa đơn cho nhiều phòng"
         open={isModalOpen}
         onCancel={() => {
@@ -219,7 +218,9 @@ export default function Bills() {
           form.resetFields(); // reset form
         }}
         onOk={() => {
-          handleCreateAllBills();
+          selectedRooms.length > 0
+            ? handleCreateAllBills()
+            : message.error("Phòng chưa được chọn");
         }}
         okText="Tạo hóa đơn"
         width={700}

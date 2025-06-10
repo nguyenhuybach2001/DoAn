@@ -9,14 +9,16 @@ import {
   Input,
   InputNumber,
   message,
+  Card as CardAntd,
   Modal,
   Popconfirm,
   Row,
   Select,
   Table,
   Upload,
+  DatePicker,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import img1 from "@/asset/images/img1.png";
 import buildingApi from "@/src/api/buildingApi";
 import roomApi from "@/src/api/roomApi";
@@ -26,20 +28,135 @@ import { useDispatch, useSelector } from "react-redux";
 import { getListBuilding } from "@/src/redux/slices/buildingSlice";
 import { getListRoomsByRole } from "@/src/redux/slices/roomSlice";
 import { findLabelsFromValue } from "@/src/utils/filterAddress";
+import statisticApi from "@/src/api/statisticApi";
+import dayjs from "dayjs";
+import { Bar, Line } from "react-chartjs-2";
+
+const electricityPrice = 3000;
+const waterPrice = 14000;
 
 export default function Rooms() {
   const [openModal, setOpenModal] = useState({ open: false, mode: null });
   const [openFilter, setOpenFilter] = useState(false);
+  const currentYear = dayjs().year();
+  const [year, setYear] = useState(currentYear);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [form] = Form.useForm();
+  const [utilityUsagePerMonth, setUtilityUsagePerMonth] = useState({});
   const [dataRoom, setDataRoom] = useState();
   const dispatch = useDispatch();
   const { dataProvince } = useSelector((state) => state.province);
   const [fileList, setFileList] = useState([]);
   const { listBuilding } = useSelector((state) => state.building);
   const { listRoomsByRole } = useSelector((state) => state.rooms);
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = {
+        year: year,
+        room_id: dataRoom ? dataRoom.roomId : null,
+      };
+      const res = await statisticApi.getUtilityUsagePerMonth(data);
+      if (res) {
+        setUtilityUsagePerMonth(res);
+      }
+    };
+    fetchData();
+  }, [dataRoom, year]);
+  const chartDataMoney = useMemo(() => {
+    const labels = Object.keys(utilityUsagePerMonth).sort();
+    const electricityCosts = labels.map(
+      (m) => (utilityUsagePerMonth[m]?.electricity || 0) * electricityPrice
+    );
+    const waterCosts = labels.map(
+      (m) => (utilityUsagePerMonth[m]?.water || 0) * waterPrice
+    );
+
+    return {
+      labels: labels.map((m) => `Tháng ${m}`),
+      datasets: [
+        {
+          label: "Tiền điện (VND)",
+          data: electricityCosts,
+          backgroundColor: "#3b82f6",
+          borderRadius: 10,
+        },
+        {
+          label: "Tiền nước (VND)",
+          data: waterCosts,
+          backgroundColor: "#10b981",
+          borderRadius: 10,
+        },
+      ],
+    };
+  }, [utilityUsagePerMonth]);
+
+  const chartOptionsMoney = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: "Chi phí điện & nước theo tháng",
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: "VNĐ",
+        },
+      },
+    },
+  };
+  const chartDataUsage = useMemo(() => {
+    const labels = Object.keys(utilityUsagePerMonth).sort();
+    const electricityUnits = labels.map(
+      (m) => utilityUsagePerMonth[m]?.electricity || 0
+    );
+    const waterUnits = labels.map((m) => utilityUsagePerMonth[m]?.water || 0);
+
+    return {
+      labels: labels.map((m) => `Tháng ${m}`),
+      datasets: [
+        {
+          label: "Số điện (kWh)",
+          data: electricityUnits,
+          borderColor: "#f97316",
+          backgroundColor: "#f97316",
+          tension: 0.4,
+          fill: false,
+        },
+        {
+          label: "Số nước (m³)",
+          data: waterUnits,
+          borderColor: "#0ea5e9",
+          backgroundColor: "#0ea5e9",
+          tension: 0.4,
+          fill: false,
+        },
+      ],
+    };
+  }, [utilityUsagePerMonth]);
+  const chartOptionsUsage = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: "Mức tiêu thụ điện & nước theo tháng",
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: "Số lượng (kWh / m³)",
+        },
+      },
+    },
+  };
 
   const columns = [
     {
@@ -100,6 +217,9 @@ export default function Rooms() {
       render: (staff) => (staff && staff.email ? staff.email : <i>Chưa có</i>),
     },
   ];
+  const handleYearChange = (date, dateString) => {
+    setYear(dateString);
+  };
 
   const onCreateRoom = async (values) => {
     const data = {
@@ -543,13 +663,54 @@ export default function Rooms() {
                 <p className="font-semibold">Staff:</p>
                 <p>{dataRoom?.staff?.email || "Chưa có"}</p>
               </div>
+              <div>
+                <p className="font-semibold">Description:</p>
+                <p>{dataRoom.description}</p>
+              </div>
             </div>
 
-            {/* Mô tả */}
-            <div>
-              <p className="font-semibold">Description:</p>
-              <p>{dataRoom.description}</p>
-            </div>
+            {/* <CardAntd
+              title="Thống kê tiền điện & nước"
+              className="rounded-2xl shadow-md"
+              extra={
+                <DatePicker
+                  onChange={handleYearChange}
+                  defaultValue={dayjs()}
+                  picker="year"
+                />
+              }
+            >
+              <Bar data={chartData} options={chartOptions} />
+            </CardAntd> */}
+            <CardAntd
+              extra={
+                <DatePicker
+                  value={dayjs(year, "YYYY")}
+                  onChange={handleYearChange}
+                  defaultValue={dayjs()}
+                  picker="year"
+                />
+              }
+              title="Tiền điện & nước (VND)"
+              className="mb-6 rounded-2xl shadow-md"
+            >
+              <Bar data={chartDataMoney} options={chartOptionsMoney} />
+            </CardAntd>
+
+            <CardAntd
+              extra={
+                <DatePicker
+                  value={dayjs(year, "YYYY")}
+                  onChange={handleYearChange}
+                  defaultValue={dayjs()}
+                  picker="year"
+                />
+              }
+              title="Số lượng tiêu thụ điện & nước (kWh / m³)"
+              className="rounded-2xl shadow-md"
+            >
+              <Line data={chartDataUsage} options={chartOptionsUsage} />
+            </CardAntd>
           </div>
         </Drawer>
       )}

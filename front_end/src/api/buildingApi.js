@@ -1,12 +1,21 @@
+import { message } from "antd";
 import axiosClient from "./baseApi";
 
 const buildingApi = {
-  createBuilding: async (name, address, image) => {
+  createBuilding: async (
+    name,
+    address,
+    image,
+    waterPrice,
+    electricityPrice
+  ) => {
     try {
       const response = await axiosClient.post("/admin/building", {
         name,
         address,
         image,
+        waterPrice,
+        electricityPrice,
       });
       return response.data;
     } catch (error) {
@@ -42,8 +51,11 @@ const buildingApi = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error deleting building:", error);
-      throw error; // Xử lý lỗi theo cách bạn muốn
+      const msg =
+        error?.response?.data?.error ||
+        error?.error ||
+        "Đã có lỗi xảy ra khi lấy thông tin người dùng.";
+      message.error(msg);
     }
   },
 

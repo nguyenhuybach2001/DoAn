@@ -42,7 +42,7 @@ export default function MyRental() {
       status: "renewal",
     },
   ];
-
+  console.log(listRoomsByRole, "ghj");
   const getStatusTag = (status) => {
     switch (status) {
       case "active":

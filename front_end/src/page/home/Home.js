@@ -1,52 +1,90 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Search from "@/src/components/search/Search";
-import Card from "@/src/components/card/Card";
-import { Button, Image, Modal, Popover } from "antd";
+import { Button, Image, Modal } from "antd";
 import img1 from "@/asset/images/img1.png";
 import { getListRooms } from "@/src/redux/slices/roomSlice";
-import roomApi from "@/src/api/roomApi";
 import { useRouter } from "next/navigation";
+import Card from "@/src/components/card/Card";
 
 export default function Home() {
   const router = useRouter();
-  const [openModal, setOpenModal] = useState(false);
   const dispatch = useDispatch();
-  const [dataRoom, setDataRoom] = useState();
+
+  // Modal
+  const [openModal, setOpenModal] = useState(false);
+  const [dataRoom, setDataRoom] = useState(null);
+
+  // Search keyword
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  // Danh sách phòng từ redux
   const { listRooms } = useSelector((state) => state.rooms);
+
   useEffect(() => {
     dispatch(getListRooms());
-  }, []);
+  }, [dispatch]);
+
+  // Filter danh sách phòng theo searchKeyword
+  const filteredRooms =
+    listRooms?.content?.filter((room) => {
+      const keyword = searchKeyword.toLowerCase();
+      // Bạn có thể thay đổi các trường lọc ở đây
+      return (
+        room.roomNumber?.toLowerCase().includes(keyword) ||
+        room.description?.toLowerCase().includes(keyword) ||
+        room.utilities?.some((u) => u.toLowerCase().includes(keyword))
+      );
+    }) || [];
+  console.log(dataRoom, "khb");
   return (
-    <div>
-      <h1 className="text-5xl font-bold w-1/2 ">
+    <div className="p-4 max-w-7xl mx-auto">
+      <h1 className="text-5xl font-bold w-full md:w-1/2 mb-4">
         Find Your Perfect Rental Home
       </h1>
-      <p className="my-5 ">
+      <p className="my-5 max-w-xl">
         An optimized platform to connect you with landlords and find your ideal
         rental space!
       </p>
-      <ul>
-        <li>🔹 Easily search by location</li>
-        <li>🔹 Manage contracts & payments seamlessly</li>
-        <li>🔹 Connect directly with landlords—no middleman</li>
+      <ul className="mb-5 list-disc list-inside max-w-xl">
+        <li> Easily search by location</li>
+        <li> Manage contracts & payments seamlessly</li>
+        <li> Connect directly with landlords—no middleman</li>
       </ul>
-      <Search />
-      <h2 className="text-3xl font-bold">Popular</h2>
+
+      {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Tìm kiếm phòng..."
+        className="mb-8 p-3 border border-gray-300 rounded-md w-full max-w-md"
+        value={searchKeyword}
+        onChange={(e) => setSearchKeyword(e.target.value)}
+      />
+      <div>
+        <h2 className="text-3xl font-bold mb-4">Popular</h2>
+      </div>
       <div className="grid my-8 sm:grid-cols-2 gap-8 md:grid-cols-3 lg:grid-cols-4">
-        {listRooms &&
-          listRooms.content.map((val, index) => (
-            <Card
+        {filteredRooms.length > 0 ? (
+          filteredRooms.map((val, index) => (
+            <div
+              key={index}
               onClick={() => {
                 setOpenModal(true);
                 setDataRoom(val);
               }}
-              key={index}
-              data={val}
-            />
-          ))}
+              className="cursor-pointer"
+            >
+              <Card data={val} />
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500 col-span-full">
+            Không tìm thấy phòng phù hợp.
+          </p>
+        )}
       </div>
+
+      {/* Modal chi tiết phòng */}
       {dataRoom && (
         <Modal
           open={openModal}
@@ -54,6 +92,7 @@ export default function Home() {
           closeIcon={false}
           onCancel={() => setOpenModal(false)}
           width={800}
+          centered
         >
           <div className="grid grid-cols-3 gap-4">
             <div className="col-span-1 ">

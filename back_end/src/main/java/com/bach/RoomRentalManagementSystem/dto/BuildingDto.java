@@ -1,5 +1,6 @@
 package com.bach.RoomRentalManagementSystem.dto;
 
+import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,4 +17,6 @@ public class BuildingDto {
     private Integer totalRoom;
     private String image;
     private Boolean isActive;
+    private Double electricityPrice;
+    private Double waterPrice;
 }

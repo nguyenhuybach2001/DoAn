@@ -7,7 +7,8 @@ public enum ServiceBillName {
     CLEANING("Dịch vụ vệ sinh"),
     INTERNET("Dịch vụ internet"),
     PARKING("Dịch vụ đỗ xe"),
-    OTHERS("Dịch vụ khác");
+    OTHERS("Dịch vụ khác"),
+    ELECTRICITY_AND_WATER("Dịch vụ điện, nước");
 
     private final String vietnameseName;
 

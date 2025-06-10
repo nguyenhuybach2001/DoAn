@@ -449,9 +449,10 @@ export default function Header() {
     INTERNET: "Dịch vụ internet",
     PARKING: "Dịch vụ đỗ xe",
     OTHERS: "Dịch vụ khác",
+    ELECTRICITY_AND_WATER: "Dịch vụ điện, nước",
   };
   return (
-    !pathName.includes("success") && (
+    !(pathName.includes("success") || pathName.includes("payment")) && (
       <div className=" flex justify-between items-center p-4 bg-white shadow-md px-16 z-20 ">
         <Image
           src={logo}
@@ -487,22 +488,25 @@ export default function Header() {
                 <Avatar icon={<UserOutlined />} />
               </div>
             </Dropdown>
-            <div className="relative cursor-pointer ">
-              <Dropdown
-                menu={{
-                  items: itemsNotification,
-                }}
-                trigger={["click"]}
-              >
+            <Dropdown
+              menu={{
+                items: itemsNotification,
+              }}
+              trigger={["click"]}
+            >
+              <div className="relative cursor-pointer ">
                 <BellOutlined className="text-2xl" />
-              </Dropdown>
-              {notifications.filter((val) => val.status == "UNREAD").length >
-                0 && (
-                <p className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-sm">
-                  {notifications.filter((val) => val.status == "UNREAD").length}
-                </p>
-              )}
-            </div>
+                {notifications.filter((val) => val.status == "UNREAD").length >
+                  0 && (
+                  <p className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-sm">
+                    {
+                      notifications.filter((val) => val.status == "UNREAD")
+                        .length
+                    }
+                  </p>
+                )}
+              </div>
+            </Dropdown>
           </div>
         ) : (
           <Button onClick={showModal}>Log in</Button>
@@ -583,21 +587,49 @@ export default function Header() {
               setModalPayment(false);
             }}
           >
-            <p>
-              {serviceNameMap[currentBill.service] || "Dịch vụ không xác định"}
-            </p>
-            <p>Thời gian: {currentBill.date}</p>
-            <p>Phòng: {currentBill.room_number}</p>
-            <p>Số tiền: {currentBill.amount}</p>
+            <div className="p-6">
+              <h2 className="text-xl font-semibold mb-4 text-center text-gray-800">
+                {serviceNameMap[currentBill.service] ||
+                  "Dịch vụ không xác định"}
+              </h2>
 
-            <Button
-              onClick={() => {
-                router.push("/payment");
-                setModalPayment(false);
-              }}
-            >
-              Thanh toán ngay
-            </Button>
+              <div className="space-y-3 text-gray-700 text-base">
+                <p>
+                  <span className="font-medium">Thời gian:</span>{" "}
+                  {currentBill.date}
+                </p>
+                <p>
+                  <span className="font-medium">Phòng:</span>{" "}
+                  {currentBill.room_number}
+                </p>
+                <p>
+                  <span className="font-medium">Số tiền:</span>{" "}
+                  <span className="text-red-500 font-semibold">
+                    {currentBill.amount?.toLocaleString()} đ
+                  </span>
+                </p>
+              </div>
+
+              <div className="mt-6 flex justify-center">
+                {currentBill?.status === "PAID" ? (
+                  <div className="w-full max-w-sm text-center text-green-600 font-semibold text-lg bg-green-100 py-3 rounded-lg">
+                    Đã thanh toán
+                  </div>
+                ) : (
+                  <Button
+                    type="primary"
+                    size="large"
+                    className="w-full max-w-sm rounded-lg"
+                    onClick={() => {
+                      router.push("/payment");
+                      setModalPayment(false);
+                    }}
+                  >
+                    Thanh toán ngay
+                  </Button>
+                )}
+              </div>
+            </div>
           </Modal>
         )}
         <Modal

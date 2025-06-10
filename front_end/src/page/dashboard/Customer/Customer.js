@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Form, Input, message, Modal, Table, Tag } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  message,
+  Modal,
+  Table,
+  Tag,
+} from "antd";
 import authApi from "@/src/api/authApi";
 import { getListCustomer } from "@/src/redux/slices/userSlice";
 
@@ -107,6 +116,7 @@ export default function Customer() {
           >
             <Input />
           </Form.Item>
+
           <Form.Item
             label="Email"
             name="email"
@@ -116,6 +126,49 @@ export default function Customer() {
             ]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            label="Số điện thoại"
+            name="phoneNumber"
+            rules={[
+              { required: true, message: "Vui lòng nhập số điện thoại" },
+              {
+                pattern: /^[0-9]{10,11}$/,
+                message: "Số điện thoại không hợp lệ",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Địa chỉ"
+            name="address"
+            rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Căn cước công dân"
+            name="citizenId"
+            rules={[
+              { required: true, message: "Vui lòng nhập CCCD" },
+              {
+                pattern: /^[0-9]{9,12}$/,
+                message: "CCCD không hợp lệ",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            label="Ngày sinh"
+            name="dateOfBirth"
+            rules={[{ required: true, message: "Vui lòng chọn ngày sinh" }]}
+          >
+            <DatePicker format="DD/MM/YYYY" style={{ width: "100%" }} />
           </Form.Item>
         </Form>
       </Modal>

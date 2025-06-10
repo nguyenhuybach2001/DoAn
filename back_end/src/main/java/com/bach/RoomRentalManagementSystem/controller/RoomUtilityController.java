@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping({"/admin/room-utility","/staff/room-utility"})
+@RequestMapping({"/auth/room-utility","/staff/room-utility"})
 public class RoomUtilityController {
 
     @Autowired

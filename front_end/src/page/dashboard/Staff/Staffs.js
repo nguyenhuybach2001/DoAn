@@ -1,10 +1,21 @@
 import { getListStaff } from "@/src/redux/slices/userSlice";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Form, Input, message, Modal, Select, Table, Tag } from "antd";
+import {
+  Button,
+  Form,
+  Input,
+  message,
+  Modal,
+  Select,
+  Space,
+  Table,
+  Tag,
+} from "antd";
 import { getListRoomsByRole } from "@/src/redux/slices/roomSlice";
 import roomApi from "@/src/api/roomApi";
 import authApi from "@/src/api/authApi";
+import { SearchOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -18,6 +29,75 @@ export default function Staffs() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [buildingId, setBuildingId] = useState(null);
   const [form] = Form.useForm();
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Tìm kiếm ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => {
+            setSelectedKeys(e.target.value ? [e.target.value] : []);
+            confirm({ closeDropdown: false }); // confirm ngay khi gõ, không đóng dropdown
+          }}
+          onPressEnter={() => confirm()}
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            onClick={() => clearFilters()}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Xóa
+          </Button>
+        </Space>
+      </div>
+    ),
+
+    filterIcon: (filtered) => (
+      <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        : "",
+    onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <span>{text}</span>
+      ) : (
+        text || <span className="text-gray-400 italic">Chưa có</span>
+      ),
+  });
+
   const handleAssignRooms = (staff) => {
     setSelectedStaff(staff);
     setIsModalOpen(true);
@@ -47,11 +127,14 @@ export default function Staffs() {
       dataIndex: "id",
       key: "id",
       width: 70,
+      sorter: (a, b) => a.id - b.id,
     },
     {
       title: "Họ và tên",
       dataIndex: "fullName",
       key: "fullName",
+      sorter: (a, b) => a.fullName.localeCompare(b.fullName),
+      ...getColumnSearchProps("fullName"),
     },
     {
       title: "Email",
@@ -59,6 +142,8 @@ export default function Staffs() {
       key: "email",
       render: (text) =>
         text || <span className="text-gray-400 italic">Chưa có</span>,
+      sorter: (a, b) => (a.email || "").localeCompare(b.email || ""),
+      ...getColumnSearchProps("email"),
     },
     {
       title: "Ngày sinh",
@@ -66,6 +151,9 @@ export default function Staffs() {
       key: "dateOfBirth",
       render: (text) =>
         text || <span className="text-gray-400 italic">Chưa có</span>,
+      sorter: (a, b) =>
+        new Date(a.dateOfBirth || 0).getTime() -
+        new Date(b.dateOfBirth || 0).getTime(),
     },
     {
       title: "CMND/CCCD",
@@ -73,6 +161,9 @@ export default function Staffs() {
       key: "identityNumber",
       render: (text) =>
         text || <span className="text-gray-400 italic">Chưa có</span>,
+      sorter: (a, b) =>
+        (a.identityNumber || "").localeCompare(b.identityNumber || ""),
+      ...getColumnSearchProps("identityNumber"),
     },
     {
       title: "Địa chỉ",
@@ -80,6 +171,7 @@ export default function Staffs() {
       key: "address",
       render: (text) =>
         text || <span className="text-gray-400 italic">Chưa có</span>,
+      sorter: (a, b) => (a.address || "").localeCompare(b.address || ""),
     },
     {
       title: "Số điện thoại",
@@ -87,15 +179,11 @@ export default function Staffs() {
       key: "phoneNumber",
       render: (text) =>
         text || <span className="text-gray-400 italic">Chưa có</span>,
+      sorter: (a, b) =>
+        (a.phoneNumber || "").localeCompare(b.phoneNumber || ""),
+      ...getColumnSearchProps("phoneNumber"),
     },
-    // {
-    //   title: "Vai trò",
-    //   dataIndex: "role",
-    //   key: "role",
-    //   render: (role) => (
-    //     <Tag color={role === "STAFF" ? "blue" : "default"}>{role}</Tag>
-    //   ),
-    // },
+
     {
       title: "Quản lý phòng",
       key: "manageRooms",

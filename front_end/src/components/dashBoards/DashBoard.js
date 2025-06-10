@@ -68,8 +68,7 @@ export default function DashBoard({ setTab }) {
     contractQuantity,
     contractsPerMonth,
     utilityUsage,
-    utilityUsagePerMonthByElectronic,
-    utilityUsagePerMonthByWater,
+    utilityUsagePerMonth,
     loading,
   } = useSelector((state) => state.statistic);
   const dispatch = useDispatch();
@@ -84,17 +83,7 @@ export default function DashBoard({ setTab }) {
     // dispatch(getContractQuantity());
     // dispatch(getContractsPerMonth());
     dispatch(getUtilityUsage());
-    dispatch(
-      getUtilityUsagePerMonthByElectronic({
-        utilityType: "ELECTRICITY",
-      })
-    );
-    dispatch(
-      getUtilityUsagePerMonthByWater({
-        utilityType: "WATER",
-        year: Number(year),
-      })
-    );
+    dispatch(getUtilityUsagePerMonth({ year }));
   }, []);
   const totalRooms = listRoomsByRole?.content?.length || 0;
   const rented =
@@ -181,30 +170,32 @@ export default function DashBoard({ setTab }) {
     dispatch(getTotalIncomePerMonth(data));
     dispatch(getTotalExpensesPerMonth(data));
   };
+
+  const utilityDataSorted = Object.entries(utilityUsagePerMonth || {})
+    .sort(([a], [b]) => parseInt(a) - parseInt(b))
+    .map(([month, usage]) => ({
+      month: `Tháng ${parseInt(month)}`,
+      electricity: usage.electricity,
+      water: usage.water,
+    }));
   const lineData = {
     labels: barLabels,
     datasets: [
       {
-        label: "Số điện",
-        data:
-          utilityUsagePerMonthByElectronic &&
-          monthOrder.map(
-            (month) => utilityUsagePerMonthByElectronic[month] || 0
-          ),
-        borderColor: "#f87171", // đỏ
-        backgroundColor: "rgba(248, 113, 113, 0.2)",
-        tension: 0.4, // làm đường cong mượt
-        fill: true,
+        label: "Điện (kWh)",
+        data: utilityDataSorted.map((item) => item.electricity),
+        fill: false,
+        borderColor: "#3B82F6",
+        backgroundColor: "#3B82F6",
+        tension: 0.4,
       },
       {
-        label: "Số nước",
-        data:
-          utilityUsagePerMonthByWater &&
-          monthOrder.map((month) => utilityUsagePerMonthByWater[month] || 0),
-        borderColor: "#60a5fa", // xanh dương
-        backgroundColor: "rgba(96, 165, 250, 0.2)",
+        label: "Nước (m³)",
+        data: utilityDataSorted.map((item) => item.water),
+        fill: false,
+        borderColor: "#10B981",
+        backgroundColor: "#10B981",
         tension: 0.4,
-        fill: true,
       },
     ],
   };
@@ -221,7 +212,7 @@ export default function DashBoard({ setTab }) {
           label: (context) => {
             return `${
               context.dataset.label
-            }: ${context.raw.toLocaleString()} VNĐ`;
+            }: ${context.raw.toLocaleString()}`;
           },
         },
       },

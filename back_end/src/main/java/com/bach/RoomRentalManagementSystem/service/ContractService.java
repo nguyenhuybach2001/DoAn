@@ -37,7 +37,6 @@ public class ContractService {
 
         RentalContract contract = new RentalContract();
         mapToRentalContract(rentalContractDto, contract, false);
-
         rentalContractRepository.save(contract);
 
         response.put("message", "Rental contract created successfully");

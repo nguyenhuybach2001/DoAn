@@ -21,10 +21,12 @@ public class RoomUtility {
 
     private Date date;
 
-    private Double usage;
+    private Double usage_electricity;
 
-    @Enumerated(EnumType.STRING)
-    private RoomUtilityType utilityType;
+    private Double usage_water;
+
+//    @Enumerated(EnumType.STRING)
+//    private RoomUtilityType utilityType;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Room room;

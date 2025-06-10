@@ -6,13 +6,13 @@ import React, { useEffect } from "react";
 export default function PaymentSuccess() {
   const router = useRouter();
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     router.push("/"); 
-  //   }, 3000);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.push("/"); 
+    }, 2000);
 
-  //   return () => clearTimeout(timer);
-  // }, []);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="flex items-center justify-center h-screen bg-green-50">

@@ -197,7 +197,7 @@ public class ServiceBillService {
         serviceBill.setService(serviceBillDto.getService());
         serviceBill.setAmount(serviceBillDto.getAmount());
         serviceBill.setDate(serviceBillDto.getDate());
-
+        serviceBill.setNote(serviceBillDto.getNote());
         Room room = roomRepository.findByBuildingBuildingIdAndRoomNumber(serviceBillDto.getBuilding_id(), serviceBillDto.getRoom_number())
                 .orElseThrow(() -> new RuntimeException("Room not found!"));
         serviceBill.setRoom(room);
@@ -227,15 +227,24 @@ public class ServiceBillService {
                 serviceBill.getRoom().getBuilding().getBuildingId()
         );
 
+        // Lấy tên dịch vụ viết thường
+        String serviceName = serviceBill.getService().getVietnameseName().toLowerCase();
+
+        // Lấy tháng từ ngày hóa đơn
+        String month = String.format("tháng %02d", serviceBill.getDate().toLocalDate().getMonthValue());
+
+
         notificationService.sendNotification(
                 null,
                 userId,
-                "Thanh toán thành công hóa đơn " + serviceBill.getService().getVietnameseName()
+                "Thanh toán thành công hóa đơn " + serviceName
+                        + " " + month
                         + " phòng " + serviceBill.getRoom().getRoomNumber(),
                 serviceBill.getBillId(),
                 NotiType.SERVICEBILL
         );
     }
+
 
     private String getMonthYear(Date date) {
         LocalDate localDate = date.toLocalDate();
