@@ -81,7 +81,6 @@ com\bach\RoomRentalManagementSystem\controller\UserController.class
 com\bach\RoomRentalManagementSystem\model\UserToken.class
 com\bach\RoomRentalManagementSystem\repository\IMaintenanceExpensesRepository.class
 com\bach\RoomRentalManagementSystem\dto\RoomUtilityDto.class
-com\bach\RoomRentalManagementSystem\model\Permission.class
 com\bach\RoomRentalManagementSystem\config\AtLeastOneAssetPresent.class
 com\bach\RoomRentalManagementSystem\controller\StripeController.class
 com\bach\RoomRentalManagementSystem\controller\VehicleController.class
